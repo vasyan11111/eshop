@@ -9,13 +9,13 @@ import java.sql.SQLException;
 
 public class DataSource {
 
-    private static DataSource     datasource;
+    private static DataSource datasource;
     private ComboPooledDataSource cpds;
 
     private DataSource() throws IOException, SQLException, PropertyVetoException {
         cpds = new ComboPooledDataSource();
-        cpds.setDriverClass("org.h2.Drive"); //loads the jdbc driver
-        cpds.setJdbcUrl("jdbc:h2:mem:test;INIT=RUNSCRIPT FROM '/sql/create.sql';");
+        cpds.setDriverClass("org.h2.Driver"); //loads the jdbc driver
+        cpds.setJdbcUrl("jdbc:h2:mem:test;INIT=RUNSCRIPT FROM './sql/create.sql';");
         cpds.setUser("sa");
         cpds.setPassword("");
 
