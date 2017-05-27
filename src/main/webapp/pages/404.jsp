@@ -1,9 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Page Not Find</title>
 </head>
 <body>
-HOME PAGE
+404 PAGE NOT FIND
 </body>
 </html>
