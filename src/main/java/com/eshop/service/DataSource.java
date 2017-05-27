@@ -2,32 +2,42 @@ package com.eshop.service;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
-import java.beans.PropertyVetoException;
-import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import static java.lang.ClassLoader.getSystemResource;
+import static java.lang.String.format;
+
 public class DataSource {
 
+    private static final String URL = "jdbc:h2:mem:test;INIT=RUNSCRIPT FROM '%s'\\;RUNSCRIPT FROM '%s'";
     private static DataSource datasource;
     private ComboPooledDataSource cpds;
 
-    private DataSource() throws IOException, SQLException, PropertyVetoException {
+    private DataSource() throws Exception {
+
         cpds = new ComboPooledDataSource();
-        cpds.setDriverClass("org.h2.Driver"); //loads the jdbc driver
-        cpds.setJdbcUrl("jdbc:h2:mem:test;INIT=RUNSCRIPT FROM './sql/create.sql';");
+        cpds.setDriverClass("org.h2.Driver");
+        cpds.setJdbcUrl(prepareUrl());
         cpds.setUser("sa");
         cpds.setPassword("");
-
-        // the settings below are optional -- c3p0 can work with defaults
         cpds.setMinPoolSize(5);
         cpds.setAcquireIncrement(5);
         cpds.setMaxPoolSize(20);
         cpds.setMaxStatements(180);
-
     }
 
-    public static DataSource getInstance() throws IOException, SQLException, PropertyVetoException {
+    private String prepareUrl() throws URISyntaxException {
+        return format(URL, prepareScript("sql/create.sql"), prepareScript("sql/populate.sql"));
+    }
+
+    private String prepareScript(String fileName) throws URISyntaxException {
+        return Paths.get(getSystemResource(fileName).toURI()).toAbsolutePath().toString();
+    }
+
+    public static DataSource getInstance() throws Exception {
         if (datasource == null) {
             datasource = new DataSource();
             return datasource;

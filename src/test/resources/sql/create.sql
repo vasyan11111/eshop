@@ -5,6 +5,6 @@ create table Users (
   lastName VARCHAR(255) NOT NULL,
   email VARCHAR(50) NOT NULL UNIQUE,
   phoneNumber VARCHAR(30),
-  accountStatus BOOLEAN NOT NULL,
+  active BOOLEAN NOT NULL,
   PRIMARY KEY (id),
 );
