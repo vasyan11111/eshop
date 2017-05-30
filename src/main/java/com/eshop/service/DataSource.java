@@ -12,8 +12,9 @@ import static java.lang.String.format;
 
 public class DataSource {
 
+    private static volatile DataSource instance;
+
     private static final String URL = "jdbc:h2:mem:test;INIT=RUNSCRIPT FROM '%s'\\;RUNSCRIPT FROM '%s'";
-    private static DataSource datasource;
     private ComboPooledDataSource cpds;
 
     private DataSource() throws Exception {
@@ -38,12 +39,13 @@ public class DataSource {
     }
 
     public static DataSource getInstance() throws Exception {
-        if (datasource == null) {
-            datasource = new DataSource();
-            return datasource;
-        } else {
-            return datasource;
+        if (instance == null) {
+            synchronized (DataSource.class){
+                if (instance == null)
+                    instance = new DataSource();
+            }
         }
+        return instance;
     }
 
     public Connection getConnection() throws SQLException {

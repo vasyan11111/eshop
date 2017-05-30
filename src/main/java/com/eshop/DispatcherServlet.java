@@ -1,8 +1,7 @@
 package com.eshop;
 
-import com.eshop.controller.LoginController;
+import com.eshop.controller.*;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,16 +15,32 @@ public class DispatcherServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        RequestDispatcher requestDispatcher = null;
+        String requestedURI = req.getRequestURI().replaceAll("/","");
 
-        if (req.getRequestURI().equals("/eshop/login")) {
+        if (requestedURI.equals("eshoplogin")) {
             new LoginController().doAction(req, resp);
-        } else if (req.getRequestURI().equals("/eshop/")) {
-            requestDispatcher = req.getRequestDispatcher("/pages/home.jsp");
-            requestDispatcher.forward(req, resp);
+
+        } else if (requestedURI.equals("eshop")) {
+            new HomeController().doAction(req, resp);
+
+        } else if (requestedURI.equals("eshopaccount")) {
+            AccountController.getInstance().doAction(req, resp);
+
+        } else if (requestedURI.equals("eshoplaptops")) {
+            new LaptopAssortmentController().doAction(req, resp);
+
+        } else if (requestedURI.equals("eshopmobiles")) {
+            new MobileAssortmentController().doAction(req, resp);
+
+        } else if (requestedURI.equals("eshopsuccess")) {
+            new SuccessController().doAction(req, resp);
+
+        } else if (requestedURI.equals("eshopbucket")) {
+            new HomeController().doAction(req, resp);
+
         } else {
-            requestDispatcher = req.getRequestDispatcher("/pages/404.jsp");
-            requestDispatcher.forward(req, resp);
+            new ErrorController().doAction(req, resp);
+
         }
     }
 
