@@ -7,6 +7,7 @@ create table Users (
   id INT NOT NULL AUTO_INCREMENT,
   email VARCHAR(50) NOT NULL UNIQUE,
   password VARCHAR(30) NOT NULL,
+  cash INT,
   firstName VARCHAR(255) NOT NULL,
   lastName VARCHAR(255) NOT NULL,
   phoneNumber VARCHAR(30),
