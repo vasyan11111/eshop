@@ -34,7 +34,7 @@ create table Laptops (
   amount int NOT NULL,
   PRIMARY KEY (id)
 );
-create table BlackList (
+create table Black_List (
   id INT NOT NULL,
   email VARCHAR(50) NOT NULL UNIQUE,
   firstName VARCHAR(255) NOT NULL,

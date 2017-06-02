@@ -14,17 +14,15 @@ public abstract class UserDAO implements AutoCloseable{
 
     public abstract void addNew(User user);
 
-    public abstract User find(int id);
-
     public abstract User find(String login);
 
     public abstract List<User> findAll();
 
-    public abstract List<User> findByString(String condition);
+    public abstract void addToBlackList(String email);
 
     public abstract void update(User user);
 
-    public abstract void delete(int id);
+    public abstract void delete(String email);
 
     @Override
     public void close() throws Exception {

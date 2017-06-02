@@ -7,7 +7,10 @@ import com.eshop.service.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class JDBCUserDao extends UserDAO{
 
@@ -50,11 +53,6 @@ public class JDBCUserDao extends UserDAO{
     }
 
     @Override
-    public User find(int id) {
-        return null;
-    }
-
-    @Override
     public User find(String login) {
         final String SQL = "SELECT * FROM  Users WHERE email=?";
 
@@ -82,21 +80,87 @@ public class JDBCUserDao extends UserDAO{
 
     @Override
     public List<User> findAll() {
-        return null;
+        List<User> users = new ArrayList<>();
+
+
+        final String SQL = "SELECT * FROM Users";
+        try (PreparedStatement statement = connection.prepareStatement(SQL)){
+            ResultSet resultSet = statement.executeQuery(SQL);
+            while (resultSet.next()) {
+                users.add(new User(resultSet.getInt("id"),
+                        resultSet.getString("firstName"),
+                        resultSet.getString("lastName"),
+                        resultSet.getString("password"),
+                        resultSet.getInt("userType"),
+                        resultSet.getString("phoneNumber"),
+                        resultSet.getString("email"),
+                        resultSet.getBoolean("active")));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
     }
 
     @Override
-    public List<User> findByString(String condition) {
-        return null;
+    public void addToBlackList(String email) {
+        User user = find(email);
+        user.setActive(false);
+        update(user);
+
+        final String SQL = "INSERT INTO Black_List (id, email, firstName, lastName, phoneNumber)" +
+                "VALUES (?, ?, ?, ?, ?)";
+
+        try (PreparedStatement statement = connection.prepareStatement(SQL)) {
+
+            statement.setInt(1, user.getId());
+            statement.setString(2, user.getEmail());
+            statement.setString(3, user.getFirstName());
+            statement.setString(4, user.getLastName());
+            statement.setString(5, user.getPhoneNumber());
+            statement.executeUpdate();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
+
 
     @Override
     public void update(User user) {
 
+        final String SQL = "UPDATE Users  SET "
+                + "firstName=?, lastName=?, password=?, userType=?, phoneNumber=?, email=?, active=? WHERE"
+                + " id=? ";
+
+        try (PreparedStatement statement = connection.prepareStatement(SQL)) {
+
+            statement.setString(1, user.getFirstName());
+            statement.setString(2, user.getLastName());
+            statement.setString(3, user.getPassword());
+            statement.setInt(4, user.getUserType());
+            statement.setString(5, user.getPhoneNumber());
+            statement.setString(6, user.getEmail());
+            statement.setBoolean(7, user.isActive());
+            statement.setInt(8, user.getId());
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(String email) {
 
+        final String SQL = "DELETE FROM Users WHERE email=?";
+
+        try (PreparedStatement statement = connection.prepareStatement(SQL)) {
+            statement.setString(1, email);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
