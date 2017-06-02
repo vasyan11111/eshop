@@ -1,12 +1,10 @@
 package com.eshop.commands;
 
 import com.eshop.dao.entities.User;
-import com.eshop.dao.jdbc.JDBCUserDao;
+import com.eshop.dao.jdbc.JDBCUserDAO;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 public class CommandRegistration implements ICommand {
 
@@ -27,15 +25,15 @@ public class CommandRegistration implements ICommand {
         String lastName = request.getParameter(LAST_NAME);
         String phoneNumber = request.getParameter(PHONE_NUMBER);
 
-        User user = new User(null, firstName, lastName, password, 2, phoneNumber, login, true);
-        JDBCUserDao jdbcUserDao = null;
+        User user = new User(null, firstName, lastName, password, 0, 2, phoneNumber, login, true);
+        JDBCUserDAO jdbcUserDAO = null;
         try {
-            jdbcUserDao = JDBCUserDao.getInstance();
+            jdbcUserDAO = JDBCUserDAO.getInstance();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        jdbcUserDao.addNew(user);
-        if(jdbcUserDao.find(login) != null){
+        jdbcUserDAO.addNew(user);
+        if(jdbcUserDAO.find(login) != null){
             page = "/pages/success.jsp";
         }
         else {

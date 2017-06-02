@@ -22,7 +22,9 @@ public abstract class UserDAO implements AutoCloseable{
 
     public abstract void update(User user);
 
-    public abstract void delete(String email);
+    public abstract void deleteUser(String email);
+
+    public abstract void setCash(String email, int cashAmount);
 
     @Override
     public void close() throws Exception {

@@ -8,16 +8,19 @@ public class User {
     private final String firstName;
     private final String lastName;
     private final String password;
-    private final Integer userType;
+    private Integer userType;
     private final String phoneNumber;
+
+    private Integer cash;
     private boolean isActive;
 
-    public User(Integer id, String name, String lastName, String password, Integer userType, String phoneNumber, String email, boolean isActive) {
+    public User(Integer id, String name, String lastName, String password, Integer cash, Integer userType, String phoneNumber, String email, boolean isActive) {
         this.id = id;
         this.email = email;
         this.firstName = name;
         this.lastName = lastName;
         this.password = password;
+        this.cash = cash;
         this.userType = userType;
         this.phoneNumber = phoneNumber;
         this.isActive = isActive;
@@ -37,6 +40,14 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public Integer getCash() {
+        return cash;
+    }
+
+    public void setCash(int cashAmount){
+        this.cash = cashAmount;
     }
 
     public Integer getUserType() {

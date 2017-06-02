@@ -9,22 +9,30 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-public class JDBCUserDao extends UserDAO{
+public class JDBCUserDAO extends UserDAO{
 
-    private static volatile JDBCUserDao instance;
+    private static final String ID = "id";
+    private static final String FIRST_NAME = "firstName";
+    private static final String LAST_NAME = "lastName";
+    private static final String EMAIL = "email";
+    private static final String PASSWORD = "password";
+    private static final String PHONE_NUMBER = "phoneNumber";
+    private static final String USER_TYPE = "userType";
+    private static final String CASH = "cash";
+    private static final String ACTIVE = "active";
 
-    private JDBCUserDao() throws Exception {
+    private static volatile JDBCUserDAO instance;
+
+    private JDBCUserDAO() throws Exception {
         connection = DataSource.getInstance().getConnection();
     }
 
-    public static JDBCUserDao getInstance() throws Exception {
+    public static JDBCUserDAO getInstance() throws Exception {
         if (instance == null) {
-            synchronized (JDBCUserDao.class){
+            synchronized (JDBCUserDAO.class){
                 if (instance == null)
-                    instance = new JDBCUserDao();
+                    instance = new JDBCUserDAO();
             }
         }
         return instance;
@@ -53,22 +61,23 @@ public class JDBCUserDao extends UserDAO{
     }
 
     @Override
-    public User find(String login) {
+    public User find(String email) {
         final String SQL = "SELECT * FROM  Users WHERE email=?";
 
         try (PreparedStatement statement = connection.prepareStatement(SQL)) {
-            statement.setString(1, login);
+            statement.setString(1, email);
             ResultSet rs = statement.executeQuery();
 
             if (rs.next()) return new User(
-                    rs.getInt("id"),
-                    rs.getString("firstName"),
-                    rs.getString("lastName"),
-                    rs.getString("password"),
-                    rs.getInt("userType"),
-                    rs.getString("phoneNumber"),
-                    rs.getString("email"),
-                    rs.getBoolean("active"));
+                    rs.getInt(ID),
+                    rs.getString(FIRST_NAME),
+                    rs.getString(LAST_NAME),
+                    rs.getString(PASSWORD),
+                    rs.getInt(CASH),
+                    rs.getInt(USER_TYPE),
+                    rs.getString(PHONE_NUMBER),
+                    rs.getString(EMAIL),
+                    rs.getBoolean(ACTIVE));
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -87,14 +96,15 @@ public class JDBCUserDao extends UserDAO{
         try (PreparedStatement statement = connection.prepareStatement(SQL)){
             ResultSet resultSet = statement.executeQuery(SQL);
             while (resultSet.next()) {
-                users.add(new User(resultSet.getInt("id"),
-                        resultSet.getString("firstName"),
-                        resultSet.getString("lastName"),
-                        resultSet.getString("password"),
-                        resultSet.getInt("userType"),
-                        resultSet.getString("phoneNumber"),
-                        resultSet.getString("email"),
-                        resultSet.getBoolean("active")));
+                users.add(new User(resultSet.getInt(ID),
+                        resultSet.getString(FIRST_NAME),
+                        resultSet.getString(LAST_NAME),
+                        resultSet.getString(PASSWORD),
+                        resultSet.getInt(CASH),
+                        resultSet.getInt(USER_TYPE),
+                        resultSet.getString(PHONE_NUMBER),
+                        resultSet.getString(EMAIL),
+                        resultSet.getBoolean(ACTIVE)));
             }
 
         } catch (SQLException e) {
@@ -129,9 +139,8 @@ public class JDBCUserDao extends UserDAO{
 
     @Override
     public void update(User user) {
-
         final String SQL = "UPDATE Users  SET "
-                + "firstName=?, lastName=?, password=?, userType=?, phoneNumber=?, email=?, active=? WHERE"
+                + "firstName=?, lastName=?, password=?, cash=?, userType=?, phoneNumber=?, email=?, active=? WHERE"
                 + " id=? ";
 
         try (PreparedStatement statement = connection.prepareStatement(SQL)) {
@@ -139,20 +148,22 @@ public class JDBCUserDao extends UserDAO{
             statement.setString(1, user.getFirstName());
             statement.setString(2, user.getLastName());
             statement.setString(3, user.getPassword());
-            statement.setInt(4, user.getUserType());
-            statement.setString(5, user.getPhoneNumber());
-            statement.setString(6, user.getEmail());
-            statement.setBoolean(7, user.isActive());
-            statement.setInt(8, user.getId());
+            statement.setInt(4, user.getCash());
+            statement.setInt(5, user.getUserType());
+            statement.setString(6, user.getPhoneNumber());
+            statement.setString(7, user.getEmail());
+            statement.setBoolean(8, user.isActive());
+            statement.setInt(9, user.getId());
             statement.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
-    public void delete(String email) {
+    public void deleteUser(String email) {
 
         final String SQL = "DELETE FROM Users WHERE email=?";
 
@@ -162,5 +173,12 @@ public class JDBCUserDao extends UserDAO{
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void setCash(String email, int cashAmount) {
+        User user = find(email);
+        user.setCash(cashAmount);
+        update(user);
     }
 }

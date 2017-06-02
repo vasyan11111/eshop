@@ -2,7 +2,7 @@ package com.eshop.commands;
 
 
 import com.eshop.dao.entities.User;
-import com.eshop.dao.jdbc.JDBCUserDao;
+import com.eshop.dao.jdbc.JDBCUserDAO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +21,7 @@ public class CommandLogin implements ICommand {
 
         User user = null;
         try {
-            user = JDBCUserDao.getInstance().find(login);
+            user = JDBCUserDAO.getInstance().find(login);
         } catch (Exception e) {
             e.printStackTrace();
         }
