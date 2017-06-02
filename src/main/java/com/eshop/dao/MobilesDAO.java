@@ -2,20 +2,22 @@ package com.eshop.dao;
 
 import com.eshop.dao.entities.Mobile;
 
-import java.sql.Connection;
 import java.util.List;
 
-public abstract class MobilesDAO implements AutoCloseable {
+public abstract class MobilesDAO extends AbstractDAO<Mobile, String> implements AutoCloseable {
 
-    protected Connection connection;
+    public MobilesDAO() throws Exception {
+    }
 
-    public abstract Mobile find(String series);
+    public abstract Mobile findEntity(String series);
 
-    public abstract List<Mobile> findAll();
+    public abstract boolean addNew(Mobile mobile);
 
-    public abstract void update(Mobile mobile);
+    public abstract List<Mobile> getAll();
 
-    public abstract void delete(String series);
+    public abstract Mobile update(Mobile mobile);
+
+    public abstract boolean delete(String series);
 
     public abstract void sell(Mobile mobile, int boughtItemsAmount);
 

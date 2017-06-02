@@ -9,6 +9,7 @@ public class Mobile {
     private Integer amount;
     private final String color;
 
+    //TODO: Обработать ввод отрицательных значений
     public Mobile(Integer id, String company, String model, String series, Integer price, Integer amount, String color) {
         this.id = id;
         this.company = company;

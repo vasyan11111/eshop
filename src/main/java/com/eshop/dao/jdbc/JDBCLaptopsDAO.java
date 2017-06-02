@@ -36,7 +36,7 @@ public class JDBCLaptopsDAO extends LaptopsDAO{
     }
 
     @Override
-    public Laptop find(String series) {
+    public Laptop findEntity(String series) {
         final String SQL = "SELECT * FROM  Laptops WHERE series=?";
 
         try (PreparedStatement statement = connection.prepareStatement(SQL)) {
@@ -59,7 +59,29 @@ public class JDBCLaptopsDAO extends LaptopsDAO{
     }
 
     @Override
-    public List<Laptop> findAll() {
+    public boolean addNew(Laptop laptop) {
+        final String SQL = "INSERT INTO Laptops (id, company, model, series, price, "
+                + " amount) "
+                + "VALUES (null, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement statement = connection.prepareStatement(SQL)) {
+
+            statement.setString(1, laptop.getCompany());
+            statement.setString(2, laptop.getModel());
+            statement.setString(3, laptop.getSeries());
+            statement.setInt(4, laptop.getPrice());
+            statement.setInt(5, laptop.getAmount());
+            statement.executeUpdate();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return findEntity(laptop.getSeries()) != null;
+    }
+
+    @Override
+    public List<Laptop> getAll() {
         List<Laptop> laptops = new ArrayList<>();
         final String SQL = "SELECT * FROM Laptops";
         try (PreparedStatement statement = connection.prepareStatement(SQL)){
@@ -80,7 +102,7 @@ public class JDBCLaptopsDAO extends LaptopsDAO{
     }
 
     @Override
-    public void update(Laptop laptop) {
+    public Laptop update(Laptop laptop) {
         final String SQL = "UPDATE Laptops SET "
                 + "company=?, model=?, series=?, price=?, amount=? WHERE"
                 + " id=? ";
@@ -98,10 +120,11 @@ public class JDBCLaptopsDAO extends LaptopsDAO{
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return findEntity(laptop.getSeries());
     }
 
     @Override
-    public void delete(String series) {
+    public boolean delete(String series) {
         final String SQL = "DELETE FROM Laptops WHERE series=?";
 
         try (PreparedStatement statement = connection.prepareStatement(SQL)) {
@@ -110,10 +133,15 @@ public class JDBCLaptopsDAO extends LaptopsDAO{
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return findEntity(series) == null;
     }
 
     @Override
     public void sell(Laptop laptop, int boughtItemsAmount) {
+        if(boughtItemsAmount <= 0){
+            return; //TODO:
+        }
         laptop.setAmount(laptop.getAmount() - boughtItemsAmount);
         update(laptop);
     }

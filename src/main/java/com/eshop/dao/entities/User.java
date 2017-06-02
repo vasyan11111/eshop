@@ -14,6 +14,7 @@ public class User {
     private Integer cash;
     private boolean isActive;
 
+    //TODO: Обработать ввод отрицательных значений
     public User(Integer id, String name, String lastName, String password, Integer cash, Integer userType, String phoneNumber, String email, boolean isActive) {
         this.id = id;
         this.email = email;

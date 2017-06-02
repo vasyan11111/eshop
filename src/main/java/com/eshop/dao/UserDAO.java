@@ -8,21 +8,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public abstract class UserDAO implements AutoCloseable{
+public abstract class UserDAO extends AbstractDAO<User, String> implements AutoCloseable{
 
-    protected Connection connection;
+    public UserDAO() throws Exception {
+    }
 
-    public abstract void addNew(User user);
+    public abstract boolean addNew(User user);
 
-    public abstract User find(String login);
+    public abstract User findEntity(String login);
 
-    public abstract List<User> findAll();
+    public abstract List<User> getAll();
 
     public abstract void addToBlackList(String email);
 
-    public abstract void update(User user);
+    public abstract User update(User user);
 
-    public abstract void deleteUser(String email);
+    public abstract boolean delete(String email);
 
     public abstract void setCash(String email, int cashAmount);
 

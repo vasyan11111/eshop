@@ -39,7 +39,7 @@ public class JDBCUserDAO extends UserDAO{
     }
 
     @Override
-    public void addNew(User user) {
+    public boolean addNew(User user) {
         final String SQL = "INSERT INTO Users (id, email, password, firstName, lastName, "
                 + " userType, phoneNumber, active) "
                 + "VALUES (null, ?, ?, ?, ?, ?, ?, ?)";
@@ -58,10 +58,12 @@ public class JDBCUserDAO extends UserDAO{
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+
+        return findEntity(user.getEmail()) != null;
     }
 
     @Override
-    public User find(String email) {
+    public User findEntity(String email) {
         final String SQL = "SELECT * FROM  Users WHERE email=?";
 
         try (PreparedStatement statement = connection.prepareStatement(SQL)) {
@@ -88,7 +90,7 @@ public class JDBCUserDAO extends UserDAO{
 
 
     @Override
-    public List<User> findAll() {
+    public List<User> getAll() {
         List<User> users = new ArrayList<>();
 
 
@@ -115,7 +117,7 @@ public class JDBCUserDAO extends UserDAO{
 
     @Override
     public void addToBlackList(String email) {
-        User user = find(email);
+        User user = findEntity(email);
         user.setActive(false);
         update(user);
 
@@ -138,7 +140,7 @@ public class JDBCUserDAO extends UserDAO{
 
 
     @Override
-    public void update(User user) {
+    public User update(User user) {
         final String SQL = "UPDATE Users  SET "
                 + "firstName=?, lastName=?, password=?, cash=?, userType=?, phoneNumber=?, email=?, active=? WHERE"
                 + " id=? ";
@@ -160,10 +162,11 @@ public class JDBCUserDAO extends UserDAO{
             e.printStackTrace();
         }
 
+        return findEntity(user.getEmail());
     }
 
     @Override
-    public void deleteUser(String email) {
+    public boolean delete(String email) {
 
         final String SQL = "DELETE FROM Users WHERE email=?";
 
@@ -173,11 +176,16 @@ public class JDBCUserDAO extends UserDAO{
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return findEntity(email) == null;
     }
 
     @Override
     public void setCash(String email, int cashAmount) {
-        User user = find(email);
+        if (cashAmount <= 0){
+            return; //TODO:
+        }
+        User user = findEntity(email);
         user.setCash(cashAmount);
         update(user);
     }

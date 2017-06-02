@@ -39,7 +39,7 @@ public class JDBCMobilesDAO extends MobilesDAO {
 
 
     @Override
-    public Mobile find(String series) {
+    public Mobile findEntity(String series) {
         final String SQL = "SELECT * FROM  Mobile_Phones WHERE series=?";
 
         try (PreparedStatement statement = connection.prepareStatement(SQL)) {
@@ -63,7 +63,30 @@ public class JDBCMobilesDAO extends MobilesDAO {
     }
 
     @Override
-    public List<Mobile> findAll() {
+    public boolean addNew(Mobile mobile) {
+        final String SQL = "INSERT INTO Mobile_Phones (id, company, model, series, price, "
+                + " amount, color) "
+                + "VALUES (null, ?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement statement = connection.prepareStatement(SQL)) {
+
+            statement.setString(1, mobile.getCompany());
+            statement.setString(2, mobile.getModel());
+            statement.setString(3, mobile.getSeries());
+            statement.setInt(4, mobile.getPrice());
+            statement.setInt(5, mobile.getAmount());
+            statement.setString(6, mobile.getColor());
+            statement.executeUpdate();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return findEntity(mobile.getSeries()) != null;
+    }
+
+    @Override
+    public List<Mobile> getAll() {
 
         List<Mobile> mobiles = new ArrayList<>();
         final String SQL = "SELECT * FROM Mobile_Phones";
@@ -86,7 +109,7 @@ public class JDBCMobilesDAO extends MobilesDAO {
     }
 
     @Override
-    public void update(Mobile mobile) {
+    public Mobile update(Mobile mobile) {
         final String SQL = "UPDATE Mobile_Phones  SET "
                 + "company=?, model=?, series=?, price=?, amount=?, color=? WHERE"
                 + " id=? ";
@@ -105,10 +128,11 @@ public class JDBCMobilesDAO extends MobilesDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return findEntity(mobile.getSeries());
     }
 
     @Override
-    public void delete(String series) {
+    public boolean delete(String series) {
         final String SQL = "DELETE FROM Mobile_Phones WHERE series=?";
 
         try (PreparedStatement statement = connection.prepareStatement(SQL)) {
@@ -117,10 +141,15 @@ public class JDBCMobilesDAO extends MobilesDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return findEntity(series) == null;
     }
 
     @Override
     public void sell(Mobile mobile, int boughtItemsAmount) {
+        if (boughtItemsAmount <= 0){
+            return; //TODO:
+        }
         mobile.setAmount(mobile.getAmount() - boughtItemsAmount);
         update(mobile);
     }

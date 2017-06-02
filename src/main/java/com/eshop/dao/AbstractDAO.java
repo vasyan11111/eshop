@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public abstract class AbstractDAO<E, K> {
-    Connection connection;
+    protected Connection connection;
 
     public AbstractDAO() throws Exception {
         DataSource connectionPool = DataSource.getInstance();
@@ -17,30 +17,7 @@ public abstract class AbstractDAO<E, K> {
 
     public abstract List<E> getAll();
     public abstract E update(E entity);
-    public abstract E getEntityById(K id);
+    public abstract E findEntity(K id);
     public abstract boolean delete(K id);
-    public abstract boolean create(E entity);
-
-
-    public PreparedStatement getPrepareStatement(String sql) {
-        PreparedStatement preparedStatement = null;
-        try {
-            preparedStatement = connection.prepareStatement(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return preparedStatement;
-    }
-
-
-    public void closePrepareStatement(PreparedStatement preparedStatement) {
-        if (preparedStatement != null) {
-            try {
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+    public abstract boolean addNew(E entity);
 }

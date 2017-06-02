@@ -9,6 +9,7 @@ public class Laptop {
     private final Integer price;
     private Integer amount;
 
+    //TODO: Обработать ввод отрицательных значений
     public Laptop(Integer id, String company, String model, String series, Integer price, Integer amount) {
         this.id = id;
         this.company = company;
