@@ -1,0 +1,102 @@
+package com.eshop.dao.jdbc;
+
+import com.eshop.dao.UserDAO;
+import com.eshop.dao.entities.User;
+import com.eshop.service.DataSource;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+public class JDBCUserDao extends UserDAO{
+
+    private static volatile JDBCUserDao instance;
+
+    private JDBCUserDao() throws Exception {
+        connection = DataSource.getInstance().getConnection();
+    }
+
+    public static JDBCUserDao getInstance() throws Exception {
+        if (instance == null) {
+            synchronized (JDBCUserDao.class){
+                if (instance == null)
+                    instance = new JDBCUserDao();
+            }
+        }
+        return instance;
+    }
+
+    @Override
+    public void addNew(User user) {
+        final String SQL = "INSERT INTO Users (id, email, password, firstName, lastName, "
+                + " userType, phoneNumber, active) "
+                + "VALUES (null, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement statement = connection.prepareStatement(SQL)) {
+
+            statement.setString(1, user.getEmail());
+            statement.setString(2, user.getPassword());
+            statement.setString(3, user.getFirstName());
+            statement.setString(4, user.getLastName());
+            statement.setInt(5, user.getUserType());
+            statement.setString(6, user.getPhoneNumber());
+            statement.setBoolean(7, true);
+            statement.executeUpdate();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public User find(int id) {
+        return null;
+    }
+
+    @Override
+    public User find(String login) {
+        final String SQL = "SELECT * FROM  Users WHERE email=?";
+
+        try (PreparedStatement statement = connection.prepareStatement(SQL)) {
+            statement.setString(1, login);
+            ResultSet rs = statement.executeQuery();
+
+            if (rs.next()) return new User(
+                    rs.getInt("id"),
+                    rs.getString("firstName"),
+                    rs.getString("lastName"),
+                    rs.getString("password"),
+                    rs.getInt("userType"),
+                    rs.getString("phoneNumber"),
+                    rs.getString("email"),
+                    rs.getBoolean("active"));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+
+    @Override
+    public List<User> findAll() {
+        return null;
+    }
+
+    @Override
+    public List<User> findByString(String condition) {
+        return null;
+    }
+
+    @Override
+    public void update(User user) {
+
+    }
+
+    @Override
+    public void delete(int id) {
+
+    }
+}

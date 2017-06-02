@@ -3,7 +3,14 @@
 <head>
     <title>Login</title>
 </head>
-<body>
-LOGIN
+<body align="center">
+<h1>Authorization</h1>
+<form align method="post" action="DispatcherServlet">
+    <p><input type="text" name="email" value="" placeholder="Email"></p>
+    <p><input type="password" name="password" value="" placeholder="Password"></p>
+    <p class="submit"><input type="submit" name="commit" value="Login"></p>
+    <input type="hidden" name="command" value="login">
+</form>
+<a href="/"><button>Home</button></a>
 </body>
 </html>
