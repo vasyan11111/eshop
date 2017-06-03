@@ -24,7 +24,6 @@ public class JDBCMobilesDAO extends MobilesDAO {
     private static volatile JDBCMobilesDAO instance;
 
     private JDBCMobilesDAO() throws Exception {
-        connection = DataSource.getInstance().getConnection();
     }
 
     public static JDBCMobilesDAO getInstance() throws Exception {
@@ -42,7 +41,7 @@ public class JDBCMobilesDAO extends MobilesDAO {
     public Mobile findEntity(String series) {
         final String SQL = "SELECT * FROM  Mobile_Phones WHERE series=?";
 
-        try (PreparedStatement statement = connection.prepareStatement(SQL)) {
+        try (PreparedStatement statement = getConnection().prepareStatement(SQL)) {
             statement.setString(1, series);
             ResultSet rs = statement.executeQuery();
 
@@ -68,7 +67,7 @@ public class JDBCMobilesDAO extends MobilesDAO {
                 + " amount, color) "
                 + "VALUES (null, ?, ?, ?, ?, ?, ?)";
 
-        try (PreparedStatement statement = connection.prepareStatement(SQL)) {
+        try (PreparedStatement statement = getConnection().prepareStatement(SQL)) {
 
             statement.setString(1, mobile.getCompany());
             statement.setString(2, mobile.getModel());
@@ -90,7 +89,7 @@ public class JDBCMobilesDAO extends MobilesDAO {
 
         List<Mobile> mobiles = new ArrayList<>();
         final String SQL = "SELECT * FROM Mobile_Phones";
-        try (PreparedStatement statement = connection.prepareStatement(SQL)){
+        try (PreparedStatement statement = getConnection().prepareStatement(SQL)){
             ResultSet resultSet = statement.executeQuery(SQL);
             while (resultSet.next()) {
                 mobiles.add(new Mobile(resultSet.getInt(ID),
@@ -114,7 +113,7 @@ public class JDBCMobilesDAO extends MobilesDAO {
                 + "company=?, model=?, series=?, price=?, amount=?, color=? WHERE"
                 + " id=? ";
 
-        try (PreparedStatement statement = connection.prepareStatement(SQL)) {
+        try (PreparedStatement statement = getConnection().prepareStatement(SQL)) {
 
             statement.setString(1, mobile.getCompany());
             statement.setString(2, mobile.getModel());
@@ -135,7 +134,7 @@ public class JDBCMobilesDAO extends MobilesDAO {
     public boolean delete(String series) {
         final String SQL = "DELETE FROM Mobile_Phones WHERE series=?";
 
-        try (PreparedStatement statement = connection.prepareStatement(SQL)) {
+        try (PreparedStatement statement = getConnection().prepareStatement(SQL)) {
             statement.setString(1, series);
             statement.executeUpdate();
         } catch (SQLException e) {

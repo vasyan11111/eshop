@@ -6,6 +6,7 @@ import com.eshop.dao.jdbc.JDBCUserDAO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 public class CommandLogin implements ICommand {
@@ -26,7 +27,9 @@ public class CommandLogin implements ICommand {
             e.printStackTrace();
         }
         if (user != null && user.getPassword().equals(password)){
-            page = "/pages/success.jsp";
+            page = "/pages/home.jsp";
+            HttpSession session = request.getSession();
+            session.setAttribute("user", user);
         }
         else {
             page = "/pages/404.jsp";

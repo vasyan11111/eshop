@@ -22,7 +22,6 @@ public class JDBCLaptopsDAO extends LaptopsDAO{
     private static volatile JDBCLaptopsDAO instance;
 
     private JDBCLaptopsDAO() throws Exception {
-        connection = DataSource.getInstance().getConnection();
     }
 
     public static JDBCLaptopsDAO getInstance() throws Exception {
@@ -39,7 +38,7 @@ public class JDBCLaptopsDAO extends LaptopsDAO{
     public Laptop findEntity(String series) {
         final String SQL = "SELECT * FROM  Laptops WHERE series=?";
 
-        try (PreparedStatement statement = connection.prepareStatement(SQL)) {
+        try (PreparedStatement statement = getConnection().prepareStatement(SQL)) {
             statement.setString(1, series);
             ResultSet rs = statement.executeQuery();
 
@@ -64,7 +63,7 @@ public class JDBCLaptopsDAO extends LaptopsDAO{
                 + " amount) "
                 + "VALUES (null, ?, ?, ?, ?, ?)";
 
-        try (PreparedStatement statement = connection.prepareStatement(SQL)) {
+        try (PreparedStatement statement = getConnection().prepareStatement(SQL)) {
 
             statement.setString(1, laptop.getCompany());
             statement.setString(2, laptop.getModel());
@@ -84,7 +83,7 @@ public class JDBCLaptopsDAO extends LaptopsDAO{
     public List<Laptop> getAll() {
         List<Laptop> laptops = new ArrayList<>();
         final String SQL = "SELECT * FROM Laptops";
-        try (PreparedStatement statement = connection.prepareStatement(SQL)){
+        try (PreparedStatement statement = getConnection().prepareStatement(SQL)){
             ResultSet resultSet = statement.executeQuery(SQL);
             while (resultSet.next()) {
                 laptops.add(new Laptop(resultSet.getInt(ID),
@@ -107,7 +106,7 @@ public class JDBCLaptopsDAO extends LaptopsDAO{
                 + "company=?, model=?, series=?, price=?, amount=? WHERE"
                 + " id=? ";
 
-        try (PreparedStatement statement = connection.prepareStatement(SQL)) {
+        try (PreparedStatement statement = getConnection().prepareStatement(SQL)) {
 
             statement.setString(1, laptop.getCompany());
             statement.setString(2, laptop.getModel());
@@ -127,7 +126,7 @@ public class JDBCLaptopsDAO extends LaptopsDAO{
     public boolean delete(String series) {
         final String SQL = "DELETE FROM Laptops WHERE series=?";
 
-        try (PreparedStatement statement = connection.prepareStatement(SQL)) {
+        try (PreparedStatement statement = getConnection().prepareStatement(SQL)) {
             statement.setString(1, series);
             statement.executeUpdate();
         } catch (SQLException e) {

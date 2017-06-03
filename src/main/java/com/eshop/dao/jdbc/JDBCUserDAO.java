@@ -4,13 +4,14 @@ import com.eshop.dao.UserDAO;
 import com.eshop.dao.entities.User;
 import com.eshop.service.DataSource;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JDBCUserDAO extends UserDAO{
+public class JDBCUserDAO extends UserDAO {
 
     private static final String ID = "id";
     private static final String FIRST_NAME = "firstName";
@@ -25,12 +26,11 @@ public class JDBCUserDAO extends UserDAO{
     private static volatile JDBCUserDAO instance;
 
     private JDBCUserDAO() throws Exception {
-        connection = DataSource.getInstance().getConnection();
     }
 
     public static JDBCUserDAO getInstance() throws Exception {
         if (instance == null) {
-            synchronized (JDBCUserDAO.class){
+            synchronized (JDBCUserDAO.class) {
                 if (instance == null)
                     instance = new JDBCUserDAO();
             }
@@ -42,9 +42,11 @@ public class JDBCUserDAO extends UserDAO{
     public boolean addNew(User user) {
         final String SQL = "INSERT INTO Users (id, email, password, firstName, lastName, "
                 + " userType, phoneNumber, active) "
-                + "VALUES (null, ?, ?, ?, ?, ?, ?, ?)";
+                + "VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (PreparedStatement statement = connection.prepareStatement(SQL)) {
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL)) {
 
             statement.setString(1, user.getEmail());
             statement.setString(2, user.getPassword());
@@ -66,7 +68,8 @@ public class JDBCUserDAO extends UserDAO{
     public User findEntity(String email) {
         final String SQL = "SELECT * FROM  Users WHERE email=?";
 
-        try (PreparedStatement statement = connection.prepareStatement(SQL)) {
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL)) {
             statement.setString(1, email);
             ResultSet rs = statement.executeQuery();
 
@@ -88,14 +91,15 @@ public class JDBCUserDAO extends UserDAO{
     }
 
 
-
     @Override
     public List<User> getAll() {
         List<User> users = new ArrayList<>();
 
 
         final String SQL = "SELECT * FROM Users";
-        try (PreparedStatement statement = connection.prepareStatement(SQL)){
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL)) {
             ResultSet resultSet = statement.executeQuery(SQL);
             while (resultSet.next()) {
                 users.add(new User(resultSet.getInt(ID),
@@ -124,7 +128,8 @@ public class JDBCUserDAO extends UserDAO{
         final String SQL = "INSERT INTO Black_List (id, email, firstName, lastName, phoneNumber)" +
                 "VALUES (?, ?, ?, ?, ?)";
 
-        try (PreparedStatement statement = connection.prepareStatement(SQL)) {
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL)) {
 
             statement.setInt(1, user.getId());
             statement.setString(2, user.getEmail());
@@ -145,7 +150,8 @@ public class JDBCUserDAO extends UserDAO{
                 + "firstName=?, lastName=?, password=?, cash=?, userType=?, phoneNumber=?, email=?, active=? WHERE"
                 + " id=? ";
 
-        try (PreparedStatement statement = connection.prepareStatement(SQL)) {
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL)) {
 
             statement.setString(1, user.getFirstName());
             statement.setString(2, user.getLastName());
@@ -170,7 +176,9 @@ public class JDBCUserDAO extends UserDAO{
 
         final String SQL = "DELETE FROM Users WHERE email=?";
 
-        try (PreparedStatement statement = connection.prepareStatement(SQL)) {
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL)) {
             statement.setString(1, email);
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -182,7 +190,7 @@ public class JDBCUserDAO extends UserDAO{
 
     @Override
     public void setCash(String email, int cashAmount) {
-        if (cashAmount <= 0){
+        if (cashAmount <= 0) {
             return; //TODO:
         }
         User user = findEntity(email);

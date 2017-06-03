@@ -5,7 +5,7 @@
 </head>
 <body align="center">
 <h1>Authorization</h1>
-<form align method="post" action="DispatcherServlet">
+<form align method="post" action="/">
     <p><input type="text" name="email" value="" placeholder="Email"></p>
     <p><input type="password" name="password" value="" placeholder="Password"></p>
     <p class="submit"><input type="submit" name="commit" value="Login"></p>

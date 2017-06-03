@@ -21,21 +21,21 @@ public class DataSource {
 
         cpds = new ComboPooledDataSource();
         cpds.setDriverClass("org.h2.Driver");
-        cpds.setJdbcUrl("jdbc:h2:mem:test;INIT=RUNSCRIPT FROM '~/ideaprojects/eshop-denis/eshop/src/main/resources/sql/create.sql'\\;RUNSCRIPT FROM '~/ideaprojects/eshop-denis/eshop/src/main/resources/sql/populate.sql'");//prepareUrl()
+        cpds.setJdbcUrl(prepareUrl());
         cpds.setUser("sa");
         cpds.setPassword("");
-        cpds.setMinPoolSize(5);
-        cpds.setAcquireIncrement(5);
-        cpds.setMaxPoolSize(20);
+        cpds.setMinPoolSize(1);
+        cpds.setAcquireIncrement(1);
+        cpds.setMaxPoolSize(5);
         cpds.setMaxStatements(180);
     }
 
     private String prepareUrl() throws URISyntaxException {
-        return format(URL, prepareScript("sql/create.sql"), prepareScript("sql/populate.sql"));
+            return format(URL, prepareScript("sql/create.sql"), prepareScript("sql/populate.sql"));
     }
 
     private String prepareScript(String fileName) throws URISyntaxException {
-        return Paths.get(getSystemResource(fileName).toURI()).toAbsolutePath().toString();
+        return Paths.get(getClass().getClassLoader().getResource(fileName).toURI()).toAbsolutePath().toString();
     }
 
     public static DataSource getInstance() throws Exception {

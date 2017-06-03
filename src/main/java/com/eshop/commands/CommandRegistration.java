@@ -5,6 +5,7 @@ import com.eshop.dao.jdbc.JDBCUserDAO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public class CommandRegistration implements ICommand {
 
@@ -29,15 +30,18 @@ public class CommandRegistration implements ICommand {
         JDBCUserDAO jdbcUserDAO = null;
         try {
             jdbcUserDAO = JDBCUserDAO.getInstance();
+            jdbcUserDAO.addNew(user);
+            if (jdbcUserDAO.findEntity(login) != null) {
+                page = "/pages/home.jsp";
+                HttpSession session = request.getSession();
+                session.setAttribute("user", user);
+            } else {
+                page = "/pages/404.jsp";
+            }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        jdbcUserDAO.addNew(user);
-        if(jdbcUserDAO.findEntity(login) != null){
-            page = "/pages/success.jsp";
-        }
-        else {
             page = "/pages/404.jsp";
+
         }
 
         return page;

@@ -4,7 +4,7 @@ import com.eshop.dao.entities.Mobile;
 
 import java.util.List;
 
-public abstract class MobilesDAO extends AbstractDAO<Mobile, String> implements AutoCloseable {
+public abstract class MobilesDAO extends AbstractDAO<Mobile, String> {
 
     public MobilesDAO() throws Exception {
     }
@@ -20,9 +20,4 @@ public abstract class MobilesDAO extends AbstractDAO<Mobile, String> implements 
     public abstract boolean delete(String series);
 
     public abstract void sell(Mobile mobile, int boughtItemsAmount);
-
-    @Override
-    public void close() throws Exception {
-        connection.close();
-    }
 }

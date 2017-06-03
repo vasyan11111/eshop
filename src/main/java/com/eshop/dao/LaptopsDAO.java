@@ -5,7 +5,7 @@ import com.eshop.dao.entities.Laptop;
 import java.sql.Connection;
 import java.util.List;
 
-public abstract class LaptopsDAO extends AbstractDAO<Laptop, String> implements AutoCloseable{
+public abstract class LaptopsDAO extends AbstractDAO<Laptop, String> {
 
     public LaptopsDAO() throws Exception {
     }
@@ -21,9 +21,4 @@ public abstract class LaptopsDAO extends AbstractDAO<Laptop, String> implements 
     public abstract boolean delete(String series);
 
     public abstract void sell(Laptop laptop, int boughtItemsAmount);
-
-    @Override
-    public void close() throws Exception {
-        connection.close();
-    }
 }

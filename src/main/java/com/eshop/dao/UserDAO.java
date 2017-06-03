@@ -2,13 +2,9 @@ package com.eshop.dao;
 
 import com.eshop.dao.entities.User;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
-public abstract class UserDAO extends AbstractDAO<User, String> implements AutoCloseable{
+public abstract class UserDAO extends AbstractDAO<User, String> {
 
     public UserDAO() throws Exception {
     }
@@ -27,8 +23,4 @@ public abstract class UserDAO extends AbstractDAO<User, String> implements AutoC
 
     public abstract void setCash(String email, int cashAmount);
 
-    @Override
-    public void close() throws Exception {
-        connection.close();
-    }
 }

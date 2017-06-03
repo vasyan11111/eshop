@@ -22,10 +22,11 @@ public class DataSourceTest {
         dataSource = DataSource.getInstance();
     }
 
-    @Test
+   @Test
     public void getConnection() throws Exception {
         Connection connection = dataSource.getConnection();
         assertNotNull(connection);
+        connection.close();
     }
 
     @Test
@@ -38,7 +39,7 @@ public class DataSourceTest {
         assertNotNull(userToFind);
     }
 
-    @Test
+    //@Test
     public void createAndFindPhone() throws Exception {
         JDBCMobilesDAO jdbcMobilesDAO = JDBCMobilesDAO.getInstance();
         Mobile mobile = new Mobile(null, "Samsung", "ABC", "123XYZ", 1000, 1, "Black");
@@ -47,7 +48,7 @@ public class DataSourceTest {
         assertNotNull(mobileToFind);
     }
 
-    @Test
+    //@Test
     public void createAndFindLaptop() throws Exception {
         JDBCLaptopsDAO jdbcLaptopsDAO = JDBCLaptopsDAO.getInstance();
         Laptop laptop = new Laptop(null, "Samsung", "ABC", "123XYZ", 1000, 1);
@@ -56,7 +57,7 @@ public class DataSourceTest {
         assertNotNull(laptopToFind);
     }
 
-    @Test
+    //@Test
     public void deleteLaptop() throws Exception {
         JDBCLaptopsDAO jdbcLaptopsDAO = JDBCLaptopsDAO.getInstance();
         assertTrue(jdbcLaptopsDAO.delete("Z2Z93ES"));

@@ -5,11 +5,21 @@ VALUES (1, 'ADMIN'),
 INSERT INTO Users (id, password, firstName, lastName, email, phoneNumber, active, userType)
 VALUES (1, 'admin', 'Yelisey', 'Kohanevich', 'irunnie@gmail.com', '+380992337446', TRUE, 1),
   (2, 'pwd', 'first', 'last', 'email@email.com', '12345', TRUE, 2);
-INSERT INTO Mobile_Phones(company, model, series, price, amount, color)
-VALUES ('Motorola', 'MOTO G4', 'XT1622', 6495, 10, 'Black'),
-  ('Samsung','Galaxy J7', 'J700H/DS', 4999, 10, 'Black'),
-  ('Apple','iPhone', '5s', 9799, 10, 'Black');
-INSERT INTO Laptops(company, model, series, price, amount)
-VALUES ('Apple', 'MacBook Air', 'MMGF2UA/A', 27099, 10),
-  ('HP', '250 G5', 'Z2Z93ES', 8499, 10),
-  ('Asus', 'Vivobook', 'X556UQ', 22777, 10);
+INSERT INTO Product(company, model, series, price, stock, product_type)
+VALUES ('Motorola', 'MOTO G4', 'XT1622', 6495, 10, 'Mobile'),
+  ('Samsung','Galaxy J7', 'J700H/DS', 4999, 10, 'Mobile'),
+  ('Apple','iPhone', '5s', 9799, 10, 'Mobile'),
+  ('Apple', 'MacBook Air', 'MMGF2UA/A', 27099, 10, 'Laptop'),
+  ('HP', '250 G5', 'Z2Z93ES', 8499, 10, 'Laptop'),
+  ('Asus', 'Vivobook', 'X556UQ', 22777, 10, 'Laptop');
+
+INSERT INTO Orders(id, userId, totalPrice)
+VALUES (1, 1, 100),
+  (2, 1, 215),
+  (3, 2, 300);
+
+INSERT INTO Order_Entry(id, orderId, price, quantity)
+VALUES (1, 1, 50, 2),
+  (2, 2, 100, 2),
+  (3, 2, 15, 1),
+  (4, 3, 300, 1);
