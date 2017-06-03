@@ -29,9 +29,9 @@
 
 
 <p class="assortment">
-    <a class="phones" href="pages/phones_assortment.jsp"></a>
-    <button type="button">PHONES</button>
-    <a class="laptops" href="pages/laptops_assortment.jsp"></a>
+    <a class="phones" href="/?command=phones"><button type="button">PHONES</button></a>
+
+    <a class="laptops" href="/?command=laptops"></a>
     <button type="button">LAPTOPS</button>
 </p>
 </body>

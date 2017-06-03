@@ -1,10 +1,7 @@
 package com.eshop.controller;
 
 
-import com.eshop.commands.CommandHome;
-import com.eshop.commands.CommandLogin;
-import com.eshop.commands.CommandRegistration;
-import com.eshop.commands.ICommand;
+import com.eshop.commands.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -17,6 +14,7 @@ public class ControllerHelper {
     private ControllerHelper(){
         commands.put("login", new CommandLogin());
         commands.put("registration", new CommandRegistration());
+        commands.put("phones", new CommandPhones());
     }
 
     public ICommand getCommand(HttpServletRequest request) {

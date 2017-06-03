@@ -2,12 +2,9 @@ package com.eshop.dao.jdbc;
 
 
 import com.eshop.dao.MobilesDAO;
-import com.eshop.dao.entities.Mobile;
-import com.eshop.service.DataSource;
+import com.eshop.dao.entities.Product;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,17 +15,17 @@ public class JDBCMobilesDAO extends MobilesDAO {
     private static final String MODEL = "model";
     private static final String SERIES = "series";
     private static final String PRICE = "price";
-    private static final String AMOUNT = "amount";
-    private static final String COLOR = "color";
+    private static final String STOCK = "stock";
+    private static final String PRODUCT_TYPE = "product_type";
 
     private static volatile JDBCMobilesDAO instance;
 
-    private JDBCMobilesDAO() throws Exception {
+    private JDBCMobilesDAO() {
     }
 
-    public static JDBCMobilesDAO getInstance() throws Exception {
+    public static JDBCMobilesDAO getInstance() {
         if (instance == null) {
-            synchronized (JDBCMobilesDAO.class){
+            synchronized (JDBCMobilesDAO.class) {
                 if (instance == null)
                     instance = new JDBCMobilesDAO();
             }
@@ -38,21 +35,21 @@ public class JDBCMobilesDAO extends MobilesDAO {
 
 
     @Override
-    public Mobile findEntity(String series) {
+    public Product findEntity(String series) {
         final String SQL = "SELECT * FROM  Mobile_Phones WHERE series=?";
 
         try (PreparedStatement statement = getConnection().prepareStatement(SQL)) {
             statement.setString(1, series);
             ResultSet rs = statement.executeQuery();
 
-            if (rs.next()) return new Mobile(
+            if (rs.next()) return new Product(
                     rs.getInt(ID),
                     rs.getString(COMPANY),
                     rs.getString(MODEL),
                     rs.getString(SERIES),
                     rs.getInt(PRICE),
-                    rs.getInt(AMOUNT),
-                    rs.getString(COLOR)
+                    rs.getInt(STOCK),
+                    rs.getString(PRODUCT_TYPE)
             );
 
         } catch (SQLException e) {
@@ -62,72 +59,78 @@ public class JDBCMobilesDAO extends MobilesDAO {
     }
 
     @Override
-    public boolean addNew(Mobile mobile) {
+    public boolean addNew(Product product) {
         final String SQL = "INSERT INTO Mobile_Phones (id, company, model, series, price, "
                 + " amount, color) "
-                + "VALUES (null, ?, ?, ?, ?, ?, ?)";
+                + "VALUES (NULL, ?, ?, ?, ?, ?, ?)";
 
-        try (PreparedStatement statement = getConnection().prepareStatement(SQL)) {
 
-            statement.setString(1, mobile.getCompany());
-            statement.setString(2, mobile.getModel());
-            statement.setString(3, mobile.getSeries());
-            statement.setInt(4, mobile.getPrice());
-            statement.setInt(5, mobile.getAmount());
-            statement.setString(6, mobile.getColor());
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL)) {
+
+            statement.setString(1, product.getCompany());
+            statement.setString(2, product.getModel());
+            statement.setString(3, product.getSeries());
+            statement.setInt(4, product.getPrice());
+            statement.setInt(5, product.getStock());
+            statement.setString(6, product.getProductType());
             statement.executeUpdate();
 
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
 
-        return findEntity(mobile.getSeries()) != null;
+        return findEntity(product.getSeries()) != null;
     }
 
     @Override
-    public List<Mobile> getAll() {
+    public List<Product> getAll() {
 
-        List<Mobile> mobiles = new ArrayList<>();
-        final String SQL = "SELECT * FROM Mobile_Phones";
-        try (PreparedStatement statement = getConnection().prepareStatement(SQL)){
+        List<Product> products = new ArrayList<>();
+        final String SQL = "SELECT * FROM Product";
+
+        try (Connection connection = getConnection();
+             Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(SQL);
             while (resultSet.next()) {
-                mobiles.add(new Mobile(resultSet.getInt(ID),
+                products.add(new Product(resultSet.getInt(ID),
                         resultSet.getString(COMPANY),
                         resultSet.getString(MODEL),
                         resultSet.getString(SERIES),
                         resultSet.getInt(PRICE),
-                        resultSet.getInt(AMOUNT),
-                        resultSet.getString(COLOR)));
+                        resultSet.getInt(STOCK),
+                        resultSet.getString(PRODUCT_TYPE)));
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return mobiles;
+        return products;
     }
 
     @Override
-    public Mobile update(Mobile mobile) {
+    public Product update(Product product) {
         final String SQL = "UPDATE Mobile_Phones  SET "
                 + "company=?, model=?, series=?, price=?, amount=?, color=? WHERE"
                 + " id=? ";
 
-        try (PreparedStatement statement = getConnection().prepareStatement(SQL)) {
 
-            statement.setString(1, mobile.getCompany());
-            statement.setString(2, mobile.getModel());
-            statement.setString(3, mobile.getSeries());
-            statement.setInt(4, mobile.getPrice());
-            statement.setInt(5, mobile.getAmount());
-            statement.setString(6, mobile.getColor());
-            statement.setInt(7, mobile.getId());
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL)) {
+
+            statement.setString(1, product.getCompany());
+            statement.setString(2, product.getModel());
+            statement.setString(3, product.getSeries());
+            statement.setInt(4, product.getPrice());
+            statement.setInt(5, product.getStock());
+            statement.setString(6, product.getProductType());
+            statement.setInt(7, product.getId());
             statement.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return findEntity(mobile.getSeries());
+        return findEntity(product.getSeries());
     }
 
     @Override
@@ -145,11 +148,11 @@ public class JDBCMobilesDAO extends MobilesDAO {
     }
 
     @Override
-    public void sell(Mobile mobile, int boughtItemsAmount) {
-        if (boughtItemsAmount <= 0){
+    public void sell(Product product, int boughtItemsAmount) {
+        if (boughtItemsAmount <= 0) {
             return; //TODO:
         }
-        mobile.setAmount(mobile.getAmount() - boughtItemsAmount);
-        update(mobile);
+        product.setStock(product.getStock() - boughtItemsAmount);
+        update(product);
     }
 }

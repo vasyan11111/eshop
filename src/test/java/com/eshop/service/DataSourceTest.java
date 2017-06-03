@@ -1,7 +1,7 @@
 package com.eshop.service;
 
 import com.eshop.dao.entities.Laptop;
-import com.eshop.dao.entities.Mobile;
+import com.eshop.dao.entities.Product;
 import com.eshop.dao.entities.User;
 import com.eshop.dao.jdbc.JDBCLaptopsDAO;
 import com.eshop.dao.jdbc.JDBCMobilesDAO;
@@ -42,10 +42,10 @@ public class DataSourceTest {
     //@Test
     public void createAndFindPhone() throws Exception {
         JDBCMobilesDAO jdbcMobilesDAO = JDBCMobilesDAO.getInstance();
-        Mobile mobile = new Mobile(null, "Samsung", "ABC", "123XYZ", 1000, 1, "Black");
-        jdbcMobilesDAO.addNew(mobile);
-        Mobile mobileToFind = jdbcMobilesDAO.findEntity("123XYZ");
-        assertNotNull(mobileToFind);
+        Product product = new Product(null, "Samsung", "ABC", "123XYZ", 1000, 1, "Black");
+        jdbcMobilesDAO.addNew(product);
+        Product productToFind = jdbcMobilesDAO.findEntity("123XYZ");
+        assertNotNull(productToFind);
     }
 
     //@Test

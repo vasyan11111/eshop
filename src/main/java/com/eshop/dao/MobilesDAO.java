@@ -1,23 +1,23 @@
 package com.eshop.dao;
 
-import com.eshop.dao.entities.Mobile;
+import com.eshop.dao.entities.Product;
 
 import java.util.List;
 
-public abstract class MobilesDAO extends AbstractDAO<Mobile, String> {
+public abstract class MobilesDAO extends AbstractDAO<Product, String> {
 
-    public MobilesDAO() throws Exception {
+    public MobilesDAO() {
     }
 
-    public abstract Mobile findEntity(String series);
+    public abstract Product findEntity(String series);
 
-    public abstract boolean addNew(Mobile mobile);
+    public abstract boolean addNew(Product product);
 
-    public abstract List<Mobile> getAll();
+    public abstract List<Product> getAll();
 
-    public abstract Mobile update(Mobile mobile);
+    public abstract Product update(Product product);
 
     public abstract boolean delete(String series);
 
-    public abstract void sell(Mobile mobile, int boughtItemsAmount);
+    public abstract void sell(Product product, int boughtItemsAmount);
 }
