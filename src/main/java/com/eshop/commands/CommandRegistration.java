@@ -33,7 +33,7 @@ public class CommandRegistration implements ICommand {
             e.printStackTrace();
         }
         jdbcUserDAO.addNew(user);
-        if(jdbcUserDAO.find(login) != null){
+        if(jdbcUserDAO.findEntity(login) != null){
             page = "/pages/success.jsp";
         }
         else {

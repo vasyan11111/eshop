@@ -21,7 +21,7 @@ public class CommandLogin implements ICommand {
 
         User user = null;
         try {
-            user = JDBCUserDAO.getInstance().find(login);
+            user = JDBCUserDAO.getInstance().findEntity(login);
         } catch (Exception e) {
             e.printStackTrace();
         }
