@@ -1,7 +1,7 @@
 package com.eshop.controller;
 
 
-import com.eshop.commands.ICommand;
+import com.eshop.command.ICommand;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;

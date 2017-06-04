@@ -1,7 +1,7 @@
 package com.eshop.controller;
 
 
-import com.eshop.commands.*;
+import com.eshop.command.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -12,15 +12,17 @@ public class ControllerHelper {
     private HashMap<String, ICommand> commands = new HashMap<>();
 
     private ControllerHelper(){
-        commands.put("login", new CommandLogin());
-        commands.put("registration", new CommandRegistration());
-        commands.put("phones", new CommandPhones());
+        commands.put("login", new LoginCommand());
+        commands.put("registration", new RegistrationCommand());
+        commands.put("phones", new PhonesCommand());
+        commands.put("laptops", new LaptopsCommand());
+        commands.put("logout", new LogoutCommand());
     }
 
     public ICommand getCommand(HttpServletRequest request) {
         ICommand command = commands.get(request.getParameter("command"));
         if (command == null) {
-            command = new CommandHome();
+            command = new HomeCommand();
         }
         return command;
     }

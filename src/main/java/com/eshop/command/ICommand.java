@@ -1,4 +1,4 @@
-package com.eshop.commands;
+package com.eshop.command;
 
 
 import javax.servlet.ServletException;

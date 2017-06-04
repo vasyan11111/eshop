@@ -1,4 +1,4 @@
-package com.eshop.commands;
+package com.eshop.command;
 
 
 import com.eshop.dao.entities.User;
@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 
-public class CommandLogin implements ICommand {
+public class LoginCommand implements ICommand {
 
     private static final String LOGIN = "email";
     private static final String PASSWORD = "password";
@@ -26,6 +26,7 @@ public class CommandLogin implements ICommand {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         if (user != null && user.getPassword().equals(password)){
             page = "/pages/home.jsp";
             HttpSession session = request.getSession();

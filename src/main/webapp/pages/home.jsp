@@ -17,10 +17,10 @@
 
 <c:choose>
     <c:when test="${not empty user}">
-        Hello ${user.firstName}
+        <jsp:include page="user_frame.jsp" />
     </c:when>
     <c:otherwise>
-        <p class="logreg">
+        <p class="logreg" align="right">
             <a href="pages/login.jsp">Sign in</a>
             <a href="pages/registration.jsp">Sign up</a>
         </p>
@@ -31,8 +31,7 @@
 <p class="assortment">
     <a class="phones" href="/?command=phones"><button type="button">PHONES</button></a>
 
-    <a class="laptops" href="/?command=laptops"></a>
-    <button type="button">LAPTOPS</button>
+    <a class="laptops" href="/?command=laptops"><button type="button">LAPTOPS</button></a>
 </p>
 </body>
 </html>

@@ -1,14 +1,14 @@
 package com.eshop.dao.jdbc;
 
 
-import com.eshop.dao.MobilesDAO;
+import com.eshop.dao.ProductDAO;
 import com.eshop.dao.entities.Product;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JDBCMobilesDAO extends MobilesDAO {
+public class JDBCProductDAO extends ProductDAO {
 
     private static final String ID = "id";
     private static final String COMPANY = "company";
@@ -18,16 +18,16 @@ public class JDBCMobilesDAO extends MobilesDAO {
     private static final String STOCK = "stock";
     private static final String PRODUCT_TYPE = "product_type";
 
-    private static volatile JDBCMobilesDAO instance;
+    private static volatile JDBCProductDAO instance;
 
-    private JDBCMobilesDAO() {
+    private JDBCProductDAO() {
     }
 
-    public static JDBCMobilesDAO getInstance() {
+    public static JDBCProductDAO getInstance() {
         if (instance == null) {
-            synchronized (JDBCMobilesDAO.class) {
+            synchronized (JDBCProductDAO.class) {
                 if (instance == null)
-                    instance = new JDBCMobilesDAO();
+                    instance = new JDBCProductDAO();
             }
         }
         return instance;
@@ -36,9 +36,10 @@ public class JDBCMobilesDAO extends MobilesDAO {
 
     @Override
     public Product findEntity(String series) {
-        final String SQL = "SELECT * FROM  Mobile_Phones WHERE series=?";
+        final String SQL = "SELECT * FROM  Product WHERE series=?";
 
-        try (PreparedStatement statement = getConnection().prepareStatement(SQL)) {
+        try (Connection connection = getConnection();
+                PreparedStatement statement = connection.prepareStatement(SQL)) {
             statement.setString(1, series);
             ResultSet rs = statement.executeQuery();
 
@@ -60,8 +61,8 @@ public class JDBCMobilesDAO extends MobilesDAO {
 
     @Override
     public boolean addNew(Product product) {
-        final String SQL = "INSERT INTO Mobile_Phones (id, company, model, series, price, "
-                + " amount, color) "
+        final String SQL = "INSERT INTO Product (id, company, model, series, price, "
+                + " amount, product_type) "
                 + "VALUES (NULL, ?, ?, ?, ?, ?, ?)";
 
 
@@ -84,7 +85,7 @@ public class JDBCMobilesDAO extends MobilesDAO {
     }
 
     @Override
-    public List<Product> getAll() {
+    public List<Product> findAll() {
 
         List<Product> products = new ArrayList<>();
         final String SQL = "SELECT * FROM Product";
@@ -110,8 +111,8 @@ public class JDBCMobilesDAO extends MobilesDAO {
 
     @Override
     public Product update(Product product) {
-        final String SQL = "UPDATE Mobile_Phones  SET "
-                + "company=?, model=?, series=?, price=?, amount=?, color=? WHERE"
+        final String SQL = "UPDATE Product  SET "
+                + "company=?, model=?, series=?, price=?, amount=?, product_type=? WHERE"
                 + " id=? ";
 
 
@@ -135,9 +136,10 @@ public class JDBCMobilesDAO extends MobilesDAO {
 
     @Override
     public boolean delete(String series) {
-        final String SQL = "DELETE FROM Mobile_Phones WHERE series=?";
+        final String SQL = "DELETE FROM Product WHERE series=?";
 
-        try (PreparedStatement statement = getConnection().prepareStatement(SQL)) {
+        try (Connection connection = getConnection();
+                PreparedStatement statement = connection.prepareStatement(SQL)) {
             statement.setString(1, series);
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -145,6 +147,30 @@ public class JDBCMobilesDAO extends MobilesDAO {
         }
 
         return findEntity(series) == null;
+    }
+
+    @Override
+    public List<Product> findSpecifiedProduct(String productType) {
+        List<Product> products = new ArrayList<>();
+        final String SQL = "SELECT * FROM Product WHERE product_type = " + productType;
+
+        try (Connection connection = getConnection();
+             Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(SQL);
+            while (resultSet.next()) {
+                products.add(new Product(resultSet.getInt(ID),
+                        resultSet.getString(COMPANY),
+                        resultSet.getString(MODEL),
+                        resultSet.getString(SERIES),
+                        resultSet.getInt(PRICE),
+                        resultSet.getInt(STOCK),
+                        resultSet.getString(PRODUCT_TYPE)));
+            }
+        } catch (SQLException e){
+                    throw new RuntimeException("???");
+        }
+
+        return products;
     }
 
     @Override

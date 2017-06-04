@@ -21,7 +21,7 @@ public class DataSource {
 
         cpds = new ComboPooledDataSource();
         cpds.setDriverClass("org.h2.Driver");
-        cpds.setJdbcUrl(prepareUrl());
+        cpds.setJdbcUrl("jdbc:h2:mem:test;INIT=RUNSCRIPT FROM '~/IdeaProjects/eshop-denis/eshop/src/main/resources/sql/create.sql'\\;RUNSCRIPT FROM '~/IdeaProjects/eshop-denis/eshop/src/main/resources/sql/populate.sql'");
         cpds.setUser("sa");
         cpds.setPassword("");
         cpds.setMinPoolSize(1);

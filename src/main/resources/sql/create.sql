@@ -26,7 +26,6 @@ create table Product (
   product_type VARCHAR(30) NOT NULL,
   PRIMARY KEY (id)
 );
-
 CREATE TABLE Orders (
   id INT NOT NULL AUTO_INCREMENT,
   userId INT NOT NULL,
@@ -34,7 +33,6 @@ CREATE TABLE Orders (
   PRIMARY KEY (id),
   FOREIGN KEY (userId) REFERENCES Users(id)
 );
-
 CREATE TABLE Order_Entry (
   id INT NOT NULL AUTO_INCREMENT,
   orderId INT NOT NULL,
