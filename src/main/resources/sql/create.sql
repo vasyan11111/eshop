@@ -36,9 +36,11 @@ CREATE TABLE Orders (
 CREATE TABLE Order_Entry (
   id INT NOT NULL AUTO_INCREMENT,
   orderId INT NOT NULL,
+  productId INT NOT NULL,
   price DECIMAL NOT NULL,
   quantity INT NOT NULL,
   PRIMARY KEY (id),
-  FOREIGN KEY (orderId) REFERENCES Orders(id)
+  FOREIGN KEY (orderId) REFERENCES Orders(id),
+  FOREIGN KEY (productId) REFERENCES Product(id)
 );
 

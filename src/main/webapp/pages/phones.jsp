@@ -15,7 +15,10 @@
         <div class="list">
             <c:forEach var="product" items="${phones}">
               <c:out value="${product.model}"/> <br/>
-             <button>Add to bucket</button><br/>
+                <form method="post" action="/?command=bucket">
+                    <input type="hidden" name="addToBucket" value="${product.series}">
+                    <input type="submit" value="add">
+                </form>
            </c:forEach>
         </div>
         <jsp:include page="user_frame.jsp"/>

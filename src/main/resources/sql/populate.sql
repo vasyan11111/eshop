@@ -16,8 +16,8 @@ INSERT INTO Orders(id, userId, totalPrice)
 VALUES (1, 1, 100),
   (2, 1, 215),
   (3, 2, 300);
-INSERT INTO Order_Entry(id, orderId, price, quantity)
-VALUES (1, 1, 50, 2),
-  (2, 2, 100, 2),
-  (3, 2, 15, 1),
-  (4, 3, 300, 1);
+INSERT INTO Order_Entry(id, orderId, productId, price, quantity)
+VALUES (1, 1, 1, 50, 2),
+  (2, 2, 1, 100, 2),
+  (3, 2, 1, 15, 1),
+  (4, 3, 1, 300, 1);

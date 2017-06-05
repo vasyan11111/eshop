@@ -23,6 +23,7 @@ public class RegistrationCommand implements ICommand {
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         String page;
 
+
         String login = request.getParameter(EMAIL);
         String password = request.getParameter(PASSWORD);
         String firstName = request.getParameter(FIRST_NAME);
