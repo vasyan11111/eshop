@@ -3,11 +3,16 @@ package com.eshop.dao.jdbc;
 import com.eshop.dao.AbstractDAO;
 import com.eshop.dao.entities.Order;
 import com.eshop.dao.entities.OrderEntry;
+import com.eshop.dao.entities.Product;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class JDBCOrderDAO extends AbstractDAO<Order, String> {
+
+    private static final String ID = "id";
+    private static final String TOTAL_PRICE = "totalPrice";
 
     private static volatile JDBCOrderDAO instance;
 
@@ -24,8 +29,50 @@ public class JDBCOrderDAO extends AbstractDAO<Order, String> {
         return instance;
     }
 
-    public List<Order> findAll() {
-        return null;
+    public List<Order> findAllByUser(String email) {
+        final String SQL = "SELECT Orders.totalPrice, Orders.id  FROM Orders " +
+                "JOIN Users ON orders.userId = Users.id " +
+                "WHERE users.email = ?";
+
+        List<Order> orders = new ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement oStatement = connection.prepareStatement(SQL)) {
+            oStatement.setString(1, email);
+            ResultSet rs = oStatement.executeQuery();
+
+            while (rs.next()) {
+                Order order = new Order();
+                order.setId(rs.getInt(ID));
+                order.setTotalPrice(rs.getDouble(TOTAL_PRICE));
+                //order.setEntries();
+                orders.add(order);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return orders;
+    }
+
+    public List<OrderEntry> findEntriesByOrderId(int orderId) {
+        final String SQL = "SELECT * FROM Order_entry" +
+                "JOIN Product ON Product.id = Order_entry.productId" +
+                "WHERE orderId  = ? ";
+
+        List<OrderEntry> entries = new ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL)) {
+           //statement.setString(1, email);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return entries;
     }
 
     @Override
@@ -55,6 +102,7 @@ public class JDBCOrderDAO extends AbstractDAO<Order, String> {
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_ORDER);
              PreparedStatement statement = connection.prepareStatement(SQL_ENTRY)) {
 
+
             connection.setAutoCommit(false);
 
             preparedStatement.setInt(1, entity.getUser().getId());
@@ -65,8 +113,7 @@ public class JDBCOrderDAO extends AbstractDAO<Order, String> {
             int orderId;
             if (generatedKeys.next()) {
                 orderId = generatedKeys.getInt(1);
-            }
-            else {
+            } else {
                 throw new SQLException("Creating order failed, no ID obtained.");
             }
 

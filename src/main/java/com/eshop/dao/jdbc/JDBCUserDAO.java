@@ -24,7 +24,7 @@ public class JDBCUserDAO extends UserDAO {
     private JDBCUserDAO(){
     }
 
-    public static JDBCUserDAO getInstance() throws Exception {
+    public static JDBCUserDAO getInstance() {
         if (instance == null) {
             synchronized (JDBCUserDAO.class) {
                 if (instance == null)
