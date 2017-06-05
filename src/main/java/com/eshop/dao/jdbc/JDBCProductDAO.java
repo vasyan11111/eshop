@@ -1,6 +1,7 @@
 package com.eshop.dao.jdbc;
 
 
+import com.eshop.dao.AbstractDAO;
 import com.eshop.dao.ProductDAO;
 import com.eshop.dao.entities.Product;
 
@@ -8,7 +9,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JDBCProductDAO extends ProductDAO {
+public class JDBCProductDAO extends AbstractDAO<Product, String> implements ProductDAO {
 
     private static final String ID = "id";
     private static final String COMPANY = "company";
@@ -39,7 +40,7 @@ public class JDBCProductDAO extends ProductDAO {
         final String SQL = "SELECT * FROM  Product WHERE series=?";
 
         try (Connection connection = getConnection();
-                PreparedStatement statement = connection.prepareStatement(SQL)) {
+             PreparedStatement statement = connection.prepareStatement(SQL)) {
             statement.setString(1, series);
             ResultSet rs = statement.executeQuery();
 
@@ -48,7 +49,7 @@ public class JDBCProductDAO extends ProductDAO {
                     rs.getString(COMPANY),
                     rs.getString(MODEL),
                     rs.getString(SERIES),
-                    rs.getInt(PRICE),
+                    rs.getDouble(PRICE),
                     rs.getInt(STOCK),
                     rs.getString(PRODUCT_TYPE)
             );
@@ -72,7 +73,7 @@ public class JDBCProductDAO extends ProductDAO {
             statement.setString(1, product.getCompany());
             statement.setString(2, product.getModel());
             statement.setString(3, product.getSeries());
-            statement.setInt(4, product.getPrice());
+            statement.setDouble(4, product.getPrice());
             statement.setInt(5, product.getStock());
             statement.setString(6, product.getProductType());
             statement.executeUpdate();
@@ -98,7 +99,7 @@ public class JDBCProductDAO extends ProductDAO {
                         resultSet.getString(COMPANY),
                         resultSet.getString(MODEL),
                         resultSet.getString(SERIES),
-                        resultSet.getInt(PRICE),
+                        resultSet.getDouble(PRICE),
                         resultSet.getInt(STOCK),
                         resultSet.getString(PRODUCT_TYPE)));
             }
@@ -122,7 +123,7 @@ public class JDBCProductDAO extends ProductDAO {
             statement.setString(1, product.getCompany());
             statement.setString(2, product.getModel());
             statement.setString(3, product.getSeries());
-            statement.setInt(4, product.getPrice());
+            statement.setDouble(4, product.getPrice());
             statement.setInt(5, product.getStock());
             statement.setString(6, product.getProductType());
             statement.setInt(7, product.getId());
@@ -139,7 +140,7 @@ public class JDBCProductDAO extends ProductDAO {
         final String SQL = "DELETE FROM Product WHERE series=?";
 
         try (Connection connection = getConnection();
-                PreparedStatement statement = connection.prepareStatement(SQL)) {
+             PreparedStatement statement = connection.prepareStatement(SQL)) {
             statement.setString(1, series);
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -155,19 +156,19 @@ public class JDBCProductDAO extends ProductDAO {
         final String SQL = "SELECT * FROM Product WHERE product_type = " + productType;
 
         try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()){
+             Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(SQL);
             while (resultSet.next()) {
                 products.add(new Product(resultSet.getInt(ID),
                         resultSet.getString(COMPANY),
                         resultSet.getString(MODEL),
                         resultSet.getString(SERIES),
-                        resultSet.getInt(PRICE),
+                        resultSet.getDouble(PRICE),
                         resultSet.getInt(STOCK),
                         resultSet.getString(PRODUCT_TYPE)));
             }
-        } catch (SQLException e){
-                    throw new RuntimeException("???");
+        } catch (SQLException e) {
+            throw new RuntimeException("???");
         }
 
         return products;

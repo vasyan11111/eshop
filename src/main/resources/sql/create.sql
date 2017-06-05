@@ -21,7 +21,7 @@ create table Product (
   company VARCHAR(30) NOT NULL,
   model VARCHAR(30) NOT NULL,
   series VARCHAR(30),
-  price INT NOT NULL,
+  price DECIMAL NOT NULL,
   stock INT NOT NULL,
   product_type VARCHAR(30) NOT NULL,
   PRIMARY KEY (id)

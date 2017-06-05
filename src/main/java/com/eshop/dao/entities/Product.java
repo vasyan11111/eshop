@@ -5,12 +5,12 @@ public class Product {
     private final String company;
     private final String model;
     private final String series;
-    private final Integer price;
+    private final Double price;
     private Integer stock;
     private final String productType;
 
     //TODO: Обработать ввод отрицательных значений
-    public Product(Integer id, String company, String model, String series, Integer price, Integer stock, String productType) {
+    public Product(Integer id, String company, String model, String series, Double price, Integer stock, String productType) {
         this.id = id;
         this.company = company;
         this.model = model;
@@ -36,7 +36,7 @@ public class Product {
         return series;
     }
 
-    public Integer getPrice() {
+    public Double getPrice() {
         return price;
     }
 

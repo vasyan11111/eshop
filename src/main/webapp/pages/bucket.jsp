@@ -6,10 +6,12 @@
     <title>Bucket</title>
 </head>
 <body>
-<c:if test = "${bucket != null}">
-    <c:forEach var="order" items="${bucket}">
-        <c:out value="${order}"/> <br/>
+<c:if test = "${not empty cart and not empty cart.entries}">
+    <c:forEach var="entry" items="${cart.entries}">
+        <c:out value="${entry}"/> <br/>
     </c:forEach>
     </c:if>
+
+<a class="order" href="/?command=order"><button type="button">COMPLETE ORDER</button></a>
 </body>
 </html>

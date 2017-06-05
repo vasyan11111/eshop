@@ -79,6 +79,7 @@ public class JDBCUserDAO extends UserDAO {
                     .setActive(rs.getBoolean(ACTIVE))
                     .setCash(rs.getInt(CASH))
                     .setPhoneNumber(rs.getString(PHONE_NUMBER))
+                    .setId(rs.getInt(ID))
                     .build();
 
         } catch (SQLException e) {

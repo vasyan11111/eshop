@@ -4,10 +4,7 @@ import com.eshop.dao.entities.Product;
 
 import java.util.List;
 
-public abstract class ProductDAO extends AbstractDAO<Product, String> {
-
-    public ProductDAO() {
-    }
+public interface ProductDAO {
 
     public abstract Product findEntity(String series);
 
