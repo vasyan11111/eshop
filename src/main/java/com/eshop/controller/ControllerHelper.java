@@ -18,6 +18,9 @@ public class ControllerHelper {
         commands.put("laptops", new LaptopsCommand());
         commands.put("logout", new LogoutCommand());
         commands.put("bucket", new BucketCommand());
+        commands.put("account", new AccountCommand());
+        commands.put("admin", new AdminCommand());
+        commands.put("delete", new DeleteProductCommand());
     }
 
     public ICommand getCommand(HttpServletRequest request) {

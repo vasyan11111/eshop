@@ -31,6 +31,7 @@ public class RegistrationCommand implements ICommand {
         String phoneNumber = request.getParameter(PHONE_NUMBER);
 
         User user = User.newBuilder()
+                .setId(null)
                 .setEmail(login)
                 .setPassword(password)
                 .setFirstName(firstName)

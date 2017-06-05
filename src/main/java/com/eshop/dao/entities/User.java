@@ -67,8 +67,22 @@ public class User {
         return isActive;
     }
 
+    public void setActive(boolean isActive){
+        this.isActive = isActive;
+    }
+
     public boolean isAdmin(){
         return this.userType == 1;
+    }
+
+    @Override
+    public String toString() {
+        return "email = " + email +
+                ", first name='" + firstName + '\'' +
+                ", last name='" + lastName + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", cash=" + cash +
+                ", isActive=" + isActive;
     }
 
     public static Builder newBuilder() {
@@ -79,6 +93,11 @@ public class User {
 
         private Builder(){
             //private constructor
+        }
+
+        public Builder setId(Integer id){
+            User.this.id = id;
+            return this;
         }
 
         public Builder setFirstName(String firstName){

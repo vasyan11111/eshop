@@ -11,7 +11,7 @@
 </head>
 <body>
 <c:choose>
-    <c:when test="${not empty user}">
+    <c:when test="${not empty user && !user.admin}">
         <div class="list">
             <c:forEach var="product" items="${phones}">
               <c:out value="${product.model}"/> <br/>
@@ -23,10 +23,19 @@
         </div>
         <jsp:include page="user_frame.jsp"/>
     </c:when>
-    <c:otherwise>
+    <c:when test="${not empty user && user.admin}">
+        <div class="list">
             <c:forEach var="product" items="${phones}">
                 <c:out value="${product.model}"/> <br/>
+                <form method="post" action="/?command=delete">
+                    <input type="hidden" name="deleteFromPhones" value="${product.series}">
+                    <input type="submit" value="Delete">
+                </form>
             </c:forEach>
+        </div>
+    </c:when>
+    <c:otherwise>
+            ${phones}
     </c:otherwise>
 </c:choose>
 </body>

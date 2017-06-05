@@ -3,10 +3,7 @@ package com.eshop.dao.jdbc;
 import com.eshop.dao.UserDAO;
 import com.eshop.dao.entities.User;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,6 +70,7 @@ public class JDBCUserDAO extends UserDAO {
             ResultSet rs = statement.executeQuery();
 
             if (rs.next()) return User.newBuilder()
+                    .setId(rs.getInt(ID))
                     .setFirstName(rs.getString(FIRST_NAME))
                     .setLastName(rs.getString(LAST_NAME))
                     .setEmail(rs.getString(EMAIL))
@@ -94,24 +92,14 @@ public class JDBCUserDAO extends UserDAO {
     public List<User> findAll() {
         List<User> users = new ArrayList<>();
 
-        User user = User.newBuilder()
-                .setFirstName("")
-                .setLastName("")
-                .setEmail("")
-                .setPassword("")
-                .setUserType(2)
-                .setActive(true)
-                .setCash(0)
-                .setPhoneNumber("")
-                .build();
-
         final String SQL = "SELECT * FROM Users";
 
         try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL)) {
+             Statement statement = connection.createStatement()) {
             ResultSet rs = statement.executeQuery(SQL);
             while (rs.next()) {
                 users.add(User.newBuilder()
+                        .setId(rs.getInt(ID))
                         .setFirstName(rs.getString(FIRST_NAME))
                         .setLastName(rs.getString(LAST_NAME))
                         .setEmail(rs.getString(EMAIL))
@@ -187,6 +175,25 @@ public class JDBCUserDAO extends UserDAO {
 
     @Override
     public void findOrders(String email) {
+        final String SQL = "SELECT * " +
+                "FROM order_entry " +
+                "JOIN product on order_entry.productId = Product.id " +
+                "WHERE orderId IN (" +
+                "SELECT Orders.id " +
+                "FROM Orders " +
+                "JOIN Users ON orders.userId = Users.id " +
+                "WHERE users.email = ?)";
 
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL)) {
+            statement.setString(1, email);
+            ResultSet rs = statement.executeQuery();
+
+            if (rs.next()) return;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+//        return null;
     }
 }

@@ -1,14 +1,11 @@
 package com.eshop.command;
 
 
-import com.eshop.dao.entities.Product;
 import com.eshop.dao.entities.User;
 import com.eshop.dao.jdbc.JDBCUserDAO;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.LinkedList;
 
 
 public class LoginCommand implements ICommand {
@@ -29,8 +26,7 @@ public class LoginCommand implements ICommand {
             e.printStackTrace();
         }
 
-        if (user != null && user.getPassword().equals(password)){
-
+        if (user != null && user.getPassword().equals(password) && user.isActive()){
             page = "/pages/home.jsp";
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
