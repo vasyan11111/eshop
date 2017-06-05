@@ -3,13 +3,9 @@ package com.eshop.dao;
 import com.eshop.service.DataSource;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.List;
 
 public abstract class AbstractDAO<E, K> {
 
-    public abstract List<E> findAll();
     public abstract E update(E entity);
     public abstract E findEntity(K id);
     public abstract boolean delete(K id);
