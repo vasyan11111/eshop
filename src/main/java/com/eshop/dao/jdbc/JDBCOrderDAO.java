@@ -3,9 +3,11 @@ package com.eshop.dao.jdbc;
 import com.eshop.dao.AbstractDAO;
 import com.eshop.dao.entities.Order;
 import com.eshop.dao.entities.OrderEntry;
-import com.eshop.dao.entities.Product;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,18 +57,20 @@ public class JDBCOrderDAO extends AbstractDAO<Order, String> {
     }
 
     public List<OrderEntry> findEntriesByOrderId(int orderId) {
-        final String SQL = "SELECT * FROM Order_entry" +
-                "JOIN Product ON Product.id = Order_entry.productId" +
+        final String SQL = "SELECT order_entry.price as e_price FROM Order_entry " +
+                "JOIN Product ON Product.id = Order_entry.productId " +
                 "WHERE orderId  = ? ";
 
         List<OrderEntry> entries = new ArrayList<>();
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL)) {
-           //statement.setString(1, email);
+            statement.setInt(1, orderId);
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
-
+                OrderEntry entry = new OrderEntry();
+                entry.setPrice(rs.getDouble("e_price"));
+                entries.add(entry);
             }
 
         } catch (SQLException e) {
