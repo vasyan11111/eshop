@@ -14,11 +14,11 @@ public class DeleteProductCommand implements ICommand {
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         JDBCProductDAO jdbcProductDAO = JDBCProductDAO.getInstance();
-        String productSeries = request.getParameter("deleteFromPhones");
+        String productSeries = request.getParameter("delete");
         Product product = jdbcProductDAO.findEntity(productSeries);
         jdbcProductDAO.delete(productSeries);
         jdbcProductDAO.update(product);
 
-        return "/pages/phones.jsp";
+        return "/pages/home.jsp";
     }
 }

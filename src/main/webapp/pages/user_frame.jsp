@@ -6,6 +6,13 @@
         </c:when>
         <c:otherwise>
             Hello <a href="/?command=account"> ${user.firstName}</a> <br/>
+            Cash = ${user.cash} <br/>
+            <form method="post" action="/">
+                <p><input name="amount" type="number" min="1" max="20000" size="3"> Add money</p>
+                <input type="submit" value="+">
+                <input type="hidden" name="command" value="addMoney">
+            </form>
+            <br/>
         </c:otherwise>
     </c:choose>
     <a href="/?command=bucket"><img src="bucket.png" alt="bucket"></a>

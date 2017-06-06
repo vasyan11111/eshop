@@ -10,21 +10,10 @@ public class User {
     private String password;
     private Integer userType;
     private String phoneNumber;
-
     private Integer cash;
     private boolean isActive;
 
-    //TODO: Обработать ввод отрицательных значений
     private User() {
-//        this.id = id;
-//        this.email = email;
-//        this.firstName = name;
-//        this.lastName = lastName;
-//        this.password = password;
-//        this.cash = cash;
-//        this.userType = userType;
-//        this.phoneNumber = phoneNumber;
-//        this.isActive = isActive;
     }
 
     public Integer getId() {
@@ -47,8 +36,8 @@ public class User {
         return cash;
     }
 
-    public void setCash(int cashAmount){
-        this.cash = cashAmount;
+    public void addCash(int cashAmount){
+        this.cash += cashAmount;
     }
 
     public Integer getUserType() {

@@ -17,7 +17,5 @@ public abstract class UserDAO extends AbstractDAO<User, String> {
 
     public abstract boolean delete(String email);
 
-    public abstract void setCash(String email, int cashAmount);
-
-    public abstract void findOrders(String email);
+    public abstract User addCash(String email, int cashAmount);
 }

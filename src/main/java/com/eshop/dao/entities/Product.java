@@ -9,7 +9,7 @@ public class Product {
     private Integer stock;
     private final String productType;
 
-    //TODO: Обработать ввод отрицательных значений
+
     public Product(Integer id, String company, String model, String series, Double price, Integer stock, String productType) {
         this.id = id;
         this.company = company;

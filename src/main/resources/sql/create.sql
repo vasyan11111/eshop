@@ -41,6 +41,6 @@ CREATE TABLE Order_Entry (
   quantity INT NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (orderId) REFERENCES Orders(id),
-  FOREIGN KEY (productId) REFERENCES Product(id)
+  FOREIGN KEY (productId) REFERENCES Product(id) ON DELETE CASCADE
 );
 

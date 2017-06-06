@@ -22,6 +22,8 @@ public class ControllerHelper {
         commands.put("admin", new AdminCommand());
         commands.put("delete", new DeleteProductCommand());
         commands.put("order", new OrderCommand());
+        commands.put("addProduct", new AddNewProductCommand());
+        commands.put("addMoney", new AddMoneyCommand());
     }
 
     public ICommand getCommand(HttpServletRequest request) {

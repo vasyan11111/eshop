@@ -63,7 +63,7 @@ public class JDBCProductDAO extends AbstractDAO<Product, String> implements Prod
     @Override
     public boolean addNew(Product product) {
         final String SQL = "INSERT INTO Product (id, company, model, series, price, "
-                + " amount, product_type) "
+                + " stock, product_type) "
                 + "VALUES (NULL, ?, ?, ?, ?, ?, ?)";
 
 
@@ -80,9 +80,10 @@ public class JDBCProductDAO extends AbstractDAO<Product, String> implements Prod
 
         } catch (SQLException ex) {
             ex.printStackTrace();
+            return false;
         }
 
-        return findEntity(product.getSeries()) != null;
+        return true;
     }
 
     @Override
@@ -113,7 +114,7 @@ public class JDBCProductDAO extends AbstractDAO<Product, String> implements Prod
     @Override
     public Product update(Product product) {
         final String SQL = "UPDATE Product  SET "
-                + "company=?, model=?, series=?, price=?, amount=?, product_type=? WHERE"
+                + "company=?, model=?, series=?, price=?, stock=?, product_type=? WHERE"
                 + " id=? ";
 
 
@@ -145,9 +146,10 @@ public class JDBCProductDAO extends AbstractDAO<Product, String> implements Prod
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
 
-        return findEntity(series) == null;
+        return true;
     }
 
     @Override

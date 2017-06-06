@@ -43,21 +43,14 @@ public class RegistrationCommand implements ICommand {
                 .build();
 
 
-        JDBCUserDAO jdbcUserDAO = null;
-        try {
-            jdbcUserDAO = JDBCUserDAO.getInstance();
-            jdbcUserDAO.addNew(user);
-            if (jdbcUserDAO.findEntity(login) != null) {
-                page = "/pages/home.jsp";
-                HttpSession session = request.getSession();
-                session.setAttribute("user", user);
-            } else {
-                page = "/pages/404.jsp";
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            page = "/pages/404.jsp";
+        JDBCUserDAO jdbcUserDAO = JDBCUserDAO.getInstance();
 
+        if (jdbcUserDAO.addNew(user)) {
+            page = "/pages/home.jsp";
+            HttpSession session = request.getSession();
+            session.setAttribute("user", user);
+        } else {
+            page = "/pages/404.jsp";
         }
 
         return page;

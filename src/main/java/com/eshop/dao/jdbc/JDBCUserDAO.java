@@ -37,8 +37,8 @@ public class JDBCUserDAO extends UserDAO {
     @Override
     public boolean addNew(User user) {
         final String SQL = "INSERT INTO Users (id, email, password, firstName, lastName, "
-                + " userType, phoneNumber, active) "
-                + "VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)";
+                + " userType, phoneNumber, active, cash) "
+                + "VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 
         try (Connection connection = getConnection();
@@ -51,13 +51,15 @@ public class JDBCUserDAO extends UserDAO {
             statement.setInt(5, user.getUserType());
             statement.setString(6, user.getPhoneNumber());
             statement.setBoolean(7, true);
+            statement.setInt(8, user.getCash());
             statement.executeUpdate();
 
         } catch (SQLException ex) {
             ex.printStackTrace();
+            return false;
         }
 
-        return findEntity(user.getEmail()) != null;
+        return true;
     }
 
     @Override
@@ -123,8 +125,8 @@ public class JDBCUserDAO extends UserDAO {
     @Override
     public User update(User user) {
         final String SQL = "UPDATE Users  SET "
-                + "firstName=?, lastName=?, password=?, cash=?, userType=?, phoneNumber=?, email=?, active=? WHERE"
-                + " id=? ";
+                + "firstName=?, lastName=?, password=?, cash=?, userType=?, phoneNumber=?, active=? WHERE"
+                + " email=? ";
 
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(SQL)) {
@@ -135,9 +137,8 @@ public class JDBCUserDAO extends UserDAO {
             statement.setInt(4, user.getCash());
             statement.setInt(5, user.getUserType());
             statement.setString(6, user.getPhoneNumber());
-            statement.setString(7, user.getEmail());
-            statement.setBoolean(8, user.isActive());
-            statement.setInt(9, user.getId());
+            statement.setBoolean(7, user.isActive());
+            statement.setString(8, user.getEmail());
             statement.executeUpdate();
 
         } catch (SQLException e) {
@@ -159,42 +160,18 @@ public class JDBCUserDAO extends UserDAO {
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
 
-        return findEntity(email) == null;
+        return true;
     }
 
     @Override
-    public void setCash(String email, int cashAmount) {
-        if (cashAmount <= 0) {
-            return; //TODO:
-        }
+    public User addCash(String email, int cashAmount) {
         User user = findEntity(email);
-        user.setCash(cashAmount);
-        update(user);
+        user.addCash(cashAmount);
+        user = update(user);
+        return user;
     }
 
-    @Override
-    public void findOrders(String email) {
-        final String SQL = "SELECT * " +
-                "FROM order_entry " +
-                "JOIN product on order_entry.productId = Product.id " +
-                "WHERE orderId IN (" +
-                "SELECT Orders.id " +
-                "FROM Orders " +
-                "JOIN Users ON orders.userId = Users.id " +
-                "WHERE users.email = ?)";
-
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL)) {
-            statement.setString(1, email);
-            ResultSet rs = statement.executeQuery();
-
-            if (rs.next()) return;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-//        return null;
-    }
 }
