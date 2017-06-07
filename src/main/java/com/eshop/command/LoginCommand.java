@@ -23,12 +23,8 @@ public class LoginCommand implements ICommand {
         String login = request.getParameter(LOGIN);
         String password = request.getParameter(PASSWORD);
 
-        User user = null;
-        try {
-            user = JDBCUserDAO.getInstance().findEntity(login);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        User user = JDBCUserDAO.getInstance().findEntity(login);
+
 
         if (user != null && user.getPassword().equals(password) && user.isActive()){
             page = "/pages/home.jsp";

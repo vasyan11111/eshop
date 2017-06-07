@@ -13,34 +13,28 @@ import java.util.List;
 public class AdminCommand implements ICommand {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String page = null;
+        String page;
         String emailToBlock = request.getParameter("blockUser");
-        if (emailToBlock != null){
-            try {
-                JDBCUserDAO jdbc = JDBCUserDAO.getInstance();
-                User user = jdbc.findEntity(emailToBlock);
-                user.setActive(false);
-                jdbc.update(user);
-                page = "/pages/admin.jsp";
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        else {
+        if (emailToBlock != null) {
+
+            JDBCUserDAO jdbc = JDBCUserDAO.getInstance();
+            User user = jdbc.findEntity(emailToBlock);
+            user.setActive(false);
+            jdbc.update(user);
+            page = "/pages/admin.jsp";
+
+        } else {
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute("user");
             if (user != null && user.isAdmin()) {
                 List<User> userList; //if null create
-                try {
-                    userList = JDBCUserDAO.getInstance().findAll();
-                    session.setAttribute("userList", userList);
-                    page = "/pages/admin.jsp";
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            else {
-                page =  "/pages/404.jsp";
+
+                userList = JDBCUserDAO.getInstance().findAll();
+                session.setAttribute("userList", userList);
+                page = "/pages/admin.jsp";
+
+            } else {
+                page = "/pages/404.jsp";
             }
         }
         return page;
