@@ -6,28 +6,36 @@ import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Properties;
 
-import static java.lang.ClassLoader.getSystemResource;
 import static java.lang.String.format;
 
 public class DataSource {
 
+
+
     private static volatile DataSource instance;
 
     private static final String URL = "jdbc:h2:mem:test;INIT=RUNSCRIPT FROM '%s'\\;RUNSCRIPT FROM '%s'";
-    private ComboPooledDataSource cpds;
+    private ComboPooledDataSource pooledDataSource;
 
     private DataSource() throws Exception {
 
-        cpds = new ComboPooledDataSource();
-        cpds.setDriverClass("org.h2.Driver");
-        cpds.setJdbcUrl("jdbc:h2:mem:test;INIT=RUNSCRIPT FROM '~/IdeaProjects/eshop-denis/eshop/src/main/resources/sql/create.sql'\\;RUNSCRIPT FROM '~/IdeaProjects/eshop-denis/eshop/src/main/resources/sql/populate.sql'");
-        cpds.setUser("sa");
-        cpds.setPassword("");
-        cpds.setMinPoolSize(1);
-        cpds.setAcquireIncrement(1);
-        cpds.setMaxPoolSize(5);
-        cpds.setMaxStatements(180);
+        // Disabling C3P0 logs
+        Properties p = new Properties(System.getProperties());
+        p.put("com.mchange.v2.log.MLog", "com.mchange.v2.log.FallbackMLog");
+        p.put("com.mchange.v2.log.FallbackMLog.DEFAULT_CUTOFF_LEVEL", "OFF");
+        System.setProperties(p);
+
+        pooledDataSource = new ComboPooledDataSource();
+        pooledDataSource.setDriverClass("org.h2.Driver");
+        pooledDataSource.setJdbcUrl("jdbc:h2:mem:test;INIT=RUNSCRIPT FROM '~/IdeaProjects/eshop-denis/eshop/src/main/resources/sql/create.sql'\\;RUNSCRIPT FROM '~/IdeaProjects/eshop-denis/eshop/src/main/resources/sql/populate.sql'");
+        pooledDataSource.setUser("sa");
+        pooledDataSource.setPassword("");
+        pooledDataSource.setMinPoolSize(1);
+        pooledDataSource.setAcquireIncrement(1);
+        pooledDataSource.setMaxPoolSize(5);
+        pooledDataSource.setMaxStatements(180);
     }
 
     private String prepareUrl() throws URISyntaxException {
@@ -49,6 +57,6 @@ public class DataSource {
     }
 
     public Connection getConnection() throws SQLException {
-        return this.cpds.getConnection();
+        return this.pooledDataSource.getConnection();
     }
 }

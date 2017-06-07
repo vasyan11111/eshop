@@ -20,16 +20,22 @@ public class CartCommand implements ICommand {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        HttpSession session = request.getSession();
+        Order cart = (Order) session.getAttribute("cart");
         String productSeries = request.getParameter("addToBucket");
-        String toBucket = request.getParameter("toBucket");
+        String cancelOrder = request.getParameter("cancelOrder");
         if (productSeries == null) {
+            if(cancelOrder != null){
+                cart = null;
+                session.setAttribute("cart", cart);
+            }
             return "/pages/bucket.jsp";
+
         } else {
             Product product = JDBCProductDAO.getInstance().findEntity(productSeries);
 
-            HttpSession session = request.getSession();
             @SuppressWarnings("unchecked")
-            Order cart = (Order) session.getAttribute("cart");
+
             User user = (User) session.getAttribute("user");
             if (cart == null) {
                 cart = new Order();

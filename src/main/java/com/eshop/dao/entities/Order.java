@@ -6,7 +6,6 @@ public class Order {
 
     private Integer id;
     private Double totalPrice;
-
     private User user;
 
     private List<OrderEntry> entries;

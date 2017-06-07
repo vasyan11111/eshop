@@ -12,5 +12,8 @@
         <input type="submit" value="block">
     </form>
 </c:forEach>
+<p align="center">
+    <a href="/"><button>Home</button></a>
+</p>
 </body>
 </html>

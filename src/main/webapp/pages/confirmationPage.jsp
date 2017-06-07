@@ -5,5 +5,6 @@
 </head>
 <body>
 Order successfully created!
+<a href="/"><button>Home</button></a>
 </body>
 </html>

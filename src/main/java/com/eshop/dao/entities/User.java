@@ -1,6 +1,7 @@
 package com.eshop.dao.entities;
 
 
+
 public class User {
 
     private Integer id;
@@ -8,9 +9,9 @@ public class User {
     private String firstName;
     private String lastName;
     private String password;
-    private Integer userType;
+    private boolean isAdmin;
     private String phoneNumber;
-    private Integer cash;
+    private Double cash;
     private boolean isActive;
 
     private User() {
@@ -32,7 +33,7 @@ public class User {
         return password;
     }
 
-    public Integer getCash() {
+    public Double getCash() {
         return cash;
     }
 
@@ -40,8 +41,8 @@ public class User {
         this.cash += cashAmount;
     }
 
-    public Integer getUserType() {
-        return userType;
+    public void withdrawCash(Double cashAmount){
+        this.cash = cash - cashAmount;
     }
 
     public String getPhoneNumber() {
@@ -61,7 +62,7 @@ public class User {
     }
 
     public boolean isAdmin(){
-        return this.userType == 1;
+        return this.isAdmin;
     }
 
     @Override
@@ -109,13 +110,13 @@ public class User {
             return this;
         }
 
-        public Builder setCash(Integer cash){
+        public Builder setCash(Double cash){
             User.this.cash = cash;
             return this;
         }
 
-        public Builder setUserType(Integer userType){
-            User.this.userType = userType;
+        public Builder setAdmin(boolean isAdmin){
+            User.this.isAdmin = isAdmin;
             return this;
         }
 

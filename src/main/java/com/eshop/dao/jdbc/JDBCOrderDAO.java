@@ -81,7 +81,22 @@ public class JDBCOrderDAO extends AbstractDAO<Order, String> {
 
     @Override
     public Order update(Order entity) {
-        return null;
+        final String SQL = "UPDATE Orders SET "
+                + " userId=? WHERE totalPrice=?";
+
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL)) {
+
+            statement.setInt(1, entity.getUser().getId());
+            statement.setDouble(2, entity.getTotalPrice());
+
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return entity;
     }
 
     @Override

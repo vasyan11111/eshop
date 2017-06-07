@@ -29,7 +29,7 @@ public class AdminCommand implements ICommand {
         else {
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute("user");
-            if (user != null && user.getUserType() == 1) {
+            if (user != null && user.isAdmin()) {
                 List<User> userList; //if null create
                 try {
                     userList = JDBCUserDAO.getInstance().findAll();

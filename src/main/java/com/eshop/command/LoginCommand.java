@@ -3,12 +3,16 @@ package com.eshop.command;
 
 import com.eshop.dao.entities.User;
 import com.eshop.dao.jdbc.JDBCUserDAO;
+import org.apache.log4j.Logger;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 
 public class LoginCommand implements ICommand {
+
+    private static final Logger log = Logger.getLogger(LoginCommand.class);
 
     private static final String LOGIN = "email";
     private static final String PASSWORD = "password";
@@ -30,6 +34,8 @@ public class LoginCommand implements ICommand {
             page = "/pages/home.jsp";
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
+
+            log.info(user.getEmail() + " logged in");
         }
         else {
             page = "/pages/404.jsp";

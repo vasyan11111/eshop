@@ -1,7 +1,9 @@
 package com.eshop.dao.jdbc;
 
+import com.eshop.command.RegistrationCommand;
 import com.eshop.dao.UserDAO;
 import com.eshop.dao.entities.User;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -9,13 +11,15 @@ import java.util.List;
 
 public class JDBCUserDAO extends UserDAO {
 
+    private static final Logger log = Logger.getLogger(RegistrationCommand.class);
+
     private static final String ID = "id";
     private static final String FIRST_NAME = "firstName";
     private static final String LAST_NAME = "lastName";
     private static final String EMAIL = "email";
     private static final String PASSWORD = "password";
     private static final String PHONE_NUMBER = "phoneNumber";
-    private static final String USER_TYPE = "userType";
+    private static final String IS_ADMIN = "admin";
     private static final String CASH = "cash";
     private static final String ACTIVE = "active";
 
@@ -36,9 +40,9 @@ public class JDBCUserDAO extends UserDAO {
 
     @Override
     public boolean addNew(User user) {
-        final String SQL = "INSERT INTO Users (id, email, password, firstName, lastName, "
-                + " userType, phoneNumber, active, cash) "
-                + "VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)";
+        final String SQL = "INSERT INTO Users ( email, password, firstName, lastName, "
+                + " admin, phoneNumber, active, cash) "
+                + "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)";
 
 
         try (Connection connection = getConnection();
@@ -48,16 +52,18 @@ public class JDBCUserDAO extends UserDAO {
             statement.setString(2, user.getPassword());
             statement.setString(3, user.getFirstName());
             statement.setString(4, user.getLastName());
-            statement.setInt(5, user.getUserType());
+            statement.setBoolean(5, user.isAdmin());
             statement.setString(6, user.getPhoneNumber());
             statement.setBoolean(7, true);
-            statement.setInt(8, user.getCash());
+            statement.setDouble(8, user.getCash());
             statement.executeUpdate();
 
         } catch (SQLException ex) {
             ex.printStackTrace();
             return false;
         }
+
+        log.info("New user added to db " + user);
 
         return true;
     }
@@ -77,9 +83,9 @@ public class JDBCUserDAO extends UserDAO {
                     .setLastName(rs.getString(LAST_NAME))
                     .setEmail(rs.getString(EMAIL))
                     .setPassword(rs.getString(PASSWORD))
-                    .setUserType(rs.getInt(USER_TYPE))
+                    .setAdmin(rs.getBoolean(IS_ADMIN))
                     .setActive(rs.getBoolean(ACTIVE))
-                    .setCash(rs.getInt(CASH))
+                    .setCash(rs.getDouble(CASH))
                     .setPhoneNumber(rs.getString(PHONE_NUMBER))
                     .setId(rs.getInt(ID))
                     .build();
@@ -107,9 +113,9 @@ public class JDBCUserDAO extends UserDAO {
                         .setLastName(rs.getString(LAST_NAME))
                         .setEmail(rs.getString(EMAIL))
                         .setPassword(rs.getString(PASSWORD))
-                        .setUserType(rs.getInt(USER_TYPE))
+                        .setAdmin(rs.getBoolean(IS_ADMIN))
                         .setActive(rs.getBoolean(ACTIVE))
-                        .setCash(rs.getInt(CASH))
+                        .setCash(rs.getDouble(CASH))
                         .setPhoneNumber(rs.getString(PHONE_NUMBER))
                         .build());
             }
@@ -125,7 +131,7 @@ public class JDBCUserDAO extends UserDAO {
     @Override
     public User update(User user) {
         final String SQL = "UPDATE Users  SET "
-                + "firstName=?, lastName=?, password=?, cash=?, userType=?, phoneNumber=?, active=? WHERE"
+                + "firstName=?, lastName=?, password=?, cash=?, admin=?, phoneNumber=?, active=? WHERE"
                 + " email=? ";
 
         try (Connection connection = getConnection();
@@ -134,8 +140,8 @@ public class JDBCUserDAO extends UserDAO {
             statement.setString(1, user.getFirstName());
             statement.setString(2, user.getLastName());
             statement.setString(3, user.getPassword());
-            statement.setInt(4, user.getCash());
-            statement.setInt(5, user.getUserType());
+            statement.setDouble(4, user.getCash());
+            statement.setBoolean(5, user.isAdmin());
             statement.setString(6, user.getPhoneNumber());
             statement.setBoolean(7, user.isActive());
             statement.setString(8, user.getEmail());
@@ -145,6 +151,7 @@ public class JDBCUserDAO extends UserDAO {
             e.printStackTrace();
         }
 
+        log.info("Updated user in db " + user.getEmail());
         return findEntity(user.getEmail());
     }
 
@@ -163,6 +170,7 @@ public class JDBCUserDAO extends UserDAO {
             return false;
         }
 
+        log.info("Deleted user from db " + email);
         return true;
     }
 
@@ -170,6 +178,12 @@ public class JDBCUserDAO extends UserDAO {
     public User addCash(String email, int cashAmount) {
         User user = findEntity(email);
         user.addCash(cashAmount);
+        user = update(user);
+        return user;
+    }
+
+    public User withdrawCash(User user, Double cashAmount){
+        user.withdrawCash(cashAmount);
         user = update(user);
         return user;
     }

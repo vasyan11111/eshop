@@ -2,6 +2,7 @@ package com.eshop.command;
 
 import com.eshop.dao.entities.Product;
 import com.eshop.dao.jdbc.JDBCProductDAO;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class AddNewProductCommand implements ICommand {
+
+    private static final Logger log = Logger.getLogger(AddNewProductCommand.class);
 
     private static final String COMPANY = "company";
     private static final String MODEL = "model";
@@ -29,6 +32,8 @@ public class AddNewProductCommand implements ICommand {
         Product product = new Product(null, company, model, series, price, stock, productType);
         JDBCProductDAO jdbcProductDAO = JDBCProductDAO.getInstance();
         jdbcProductDAO.addNew(product);
+
+        log.info(product.getProductType() + " " + product.getModel() + " added");
 
         return "/pages/home.jsp";
     }

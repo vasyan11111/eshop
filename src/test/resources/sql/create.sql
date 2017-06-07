@@ -1,8 +1,3 @@
-create table UserType (
-  id INT NOT NULL AUTO_INCREMENT,
-  name VARCHAR(30) NOT NULL,
-  PRIMARY KEY (id)
-);
 create table Users (
   id INT NOT NULL AUTO_INCREMENT,
   email VARCHAR(50) NOT NULL UNIQUE,
@@ -12,8 +7,7 @@ create table Users (
   lastName VARCHAR(255) NOT NULL,
   phoneNumber VARCHAR(30),
   active BOOLEAN NOT NULL,
-  userType INT NOT NULL,
-  FOREIGN KEY (userType) REFERENCES UserType(id),
+  admin BOOLEAN NOT NULL,
   PRIMARY KEY (id),
 );
 create table Product (

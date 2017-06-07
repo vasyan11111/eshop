@@ -18,7 +18,6 @@ public class ControllerHelper {
         commands.put("laptops", new LaptopsCommand());
         commands.put("logout", new LogoutCommand());
         commands.put("bucket", new CartCommand());
-        commands.put("account", new AccountCommand());
         commands.put("admin", new AdminCommand());
         commands.put("delete", new DeleteProductCommand());
         commands.put("order", new OrderCommand());
