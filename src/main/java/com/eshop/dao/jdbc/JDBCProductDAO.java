@@ -1,15 +1,17 @@
 package com.eshop.dao.jdbc;
 
-
 import com.eshop.dao.AbstractDAO;
 import com.eshop.dao.ProductDAO;
 import com.eshop.dao.entities.Product;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class JDBCProductDAO extends AbstractDAO<Product, String> implements ProductDAO {
+
+    private static final Logger log = Logger.getLogger(JDBCProductDAO.class);
 
     private static final String ID = "id";
     private static final String COMPANY = "company";
@@ -55,7 +57,7 @@ public class JDBCProductDAO extends AbstractDAO<Product, String> implements Prod
             );
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.info(e);
         }
         return null;
     }
@@ -78,8 +80,8 @@ public class JDBCProductDAO extends AbstractDAO<Product, String> implements Prod
             statement.setString(6, product.getProductType());
             statement.executeUpdate();
 
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            log.info(e);
             return false;
         }
 
@@ -106,7 +108,7 @@ public class JDBCProductDAO extends AbstractDAO<Product, String> implements Prod
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.info(e);
         }
         return products;
     }
@@ -131,7 +133,7 @@ public class JDBCProductDAO extends AbstractDAO<Product, String> implements Prod
             statement.executeUpdate();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.info(e);
         }
         return findEntity(product.getSeries());
     }
@@ -145,7 +147,7 @@ public class JDBCProductDAO extends AbstractDAO<Product, String> implements Prod
             statement.setString(1, series);
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.info(e);
             return false;
         }
 
@@ -170,7 +172,7 @@ public class JDBCProductDAO extends AbstractDAO<Product, String> implements Prod
                         resultSet.getString(PRODUCT_TYPE)));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("???");
+            log.info(e);
         }
 
         return products;
@@ -178,9 +180,6 @@ public class JDBCProductDAO extends AbstractDAO<Product, String> implements Prod
 
     @Override
     public void sell(Product product, int boughtItemsAmount) {
-        if (boughtItemsAmount <= 0) {
-            return; //TODO:
-        }
         product.setStock(product.getStock() - boughtItemsAmount);
         update(product);
     }

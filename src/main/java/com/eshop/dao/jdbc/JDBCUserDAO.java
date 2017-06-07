@@ -59,7 +59,7 @@ public class JDBCUserDAO extends UserDAO {
             statement.executeUpdate();
 
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            log.info(ex);
             return false;
         }
 
@@ -91,7 +91,7 @@ public class JDBCUserDAO extends UserDAO {
                     .build();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.info(e);
         }
         return null;
     }
@@ -121,7 +121,7 @@ public class JDBCUserDAO extends UserDAO {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.info(e);
         }
         return users;
     }
@@ -148,7 +148,7 @@ public class JDBCUserDAO extends UserDAO {
             statement.executeUpdate();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.info(e);
         }
 
         log.info("Updated user in db " + user.getEmail());
@@ -166,7 +166,7 @@ public class JDBCUserDAO extends UserDAO {
             statement.setString(1, email);
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.info(e);
             return false;
         }
 
